@@ -4,18 +4,21 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class PostQueryThread implements Runnable{
+public class PostQueryThread implements Runnable {
 
     private final JSONObject query;
     private final HttpURLConnection connection;
 
-    private volatile Response response;
+    //volatile, so "connection" gets written directly to memory instead of (protected) cache
+    private volatile Response response = null;
 
-    PostQueryThread(JSONObject _query, HttpURLConnection _connection){
+    PostQueryThread(JSONObject _query, HttpURLConnection _connection) {
         query = _query;
         connection = _connection;
     }
@@ -24,17 +27,28 @@ public class PostQueryThread implements Runnable{
     public void run() {
         DataOutputStream outputStream = null;
         try {
+            //Write query to output and close it
             outputStream = new DataOutputStream(connection.getOutputStream());
-
             outputStream.writeBytes(query.toString());
             outputStream.flush();
             outputStream.close();
 
-            //response = new Response(connection.getResponseCode(), connection.getResponseMessage());
+            //Read body into StringBuilder
+            StringBuilder result = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line.trim());
+                }
+            }
 
-            Log.i("STATUS", connection.getResponseCode() + "");
-            //Log.i("MSG" , connection.getResponseMessage());
+            //Create response
+            int code = connection.getResponseCode();
+            String message = connection.getResponseMessage();
+            String body = result.toString();
 
+            Log.v(this.getClass().getName(), "Got response: " + message + " - " + code);
+            response = new Response(code, message, body);
         } catch (IOException e) {
             e.printStackTrace();
         }

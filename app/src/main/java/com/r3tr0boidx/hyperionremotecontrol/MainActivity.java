@@ -5,6 +5,7 @@ package com.r3tr0boidx.hyperionremotecontrol;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,20 +25,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView text = findViewById(R.id.textView);
+
         try {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            getServerInfo();
-
+            getServerInfo(text);
         } catch (IOException | JSONException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    void getServerInfo() throws JSONException, IOException, InterruptedException {
+    void getServerInfo(TextView _view) throws JSONException, IOException, InterruptedException {
         JSONObject json = new JSONObject();
         json.put("command", "serverinfo");
-        NetworkManager.getInstance().postQuery(json);
+        Response r = NetworkManager.getInstance().postQuery(json);
+
+        _view.setText(r.getResponseBody());
     }
 }

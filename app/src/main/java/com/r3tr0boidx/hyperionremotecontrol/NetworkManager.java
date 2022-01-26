@@ -32,12 +32,13 @@ public class NetworkManager {
         Log.v("establishConnection", "Started network thread");
     }
 
-    public void postQuery(JSONObject _query) throws IOException, InterruptedException {
+    public Response postQuery(JSONObject _query) throws IOException, InterruptedException {
         PostQueryThread queryThread = new PostQueryThread(_query, connection);
         Thread thread = new Thread(queryThread);
         thread.start();
         thread.join();
 
+        return queryThread.getResponse();
     }
 
     public static NetworkManager getInstance() {
