@@ -2,6 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,9 +48,13 @@ public class PostQueryThread implements Runnable {
             String message = connection.getResponseMessage();
             String body = result.toString();
 
-            Log.v(this.getClass().getName(), "Got response: " + message + " - " + code);
+            Log.v("PostQueryThread", "Got response: " + message + " - " + code);
             response = new Response(code, message, body);
         } catch (IOException e) {
+            Log.e("PostQueryThread", "Problem with receiving data");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e("PostQueryThread", "Not able to parse data into JSON object");
             e.printStackTrace();
         }
     }

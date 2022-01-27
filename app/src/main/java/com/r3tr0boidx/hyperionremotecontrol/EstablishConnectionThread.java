@@ -43,6 +43,7 @@ public class EstablishConnectionThread implements Runnable{
         return getConnection(serverURL);
     }
 
+    //TODO: Not working right now - Hyperion bug
     public static HttpURLConnection getSecureConnection(Inet4Address _ip) throws IOException {
         URL serverURL = getServerURL(_ip, NetworkManager.HTTPS_PORT, "https");
         return getConnection(serverURL);

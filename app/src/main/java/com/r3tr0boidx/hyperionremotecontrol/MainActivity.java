@@ -7,14 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,17 +30,10 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            getServerInfo(text);
-        } catch (IOException | JSONException | InterruptedException e) {
+            InformationReader information = new InformationReader();
+
+        } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    void getServerInfo(TextView _view) throws JSONException, IOException, InterruptedException {
-        JSONObject json = new JSONObject();
-        json.put("command", "serverinfo");
-        Response r = NetworkManager.getInstance().postQuery(json);
-
-        _view.setText(r.getResponseBody());
     }
 }

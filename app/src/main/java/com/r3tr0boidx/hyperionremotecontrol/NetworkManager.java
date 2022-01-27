@@ -32,13 +32,21 @@ public class NetworkManager {
         Log.v("establishConnection", "Started network thread");
     }
 
-    public Response postQuery(JSONObject _query) throws IOException, InterruptedException {
-        PostQueryThread queryThread = new PostQueryThread(_query, connection);
-        Thread thread = new Thread(queryThread);
-        thread.start();
-        thread.join();
+    public Response postQuery(JSONObject _query) throws InterruptedException {
+        if (connection != null){
+            PostQueryThread queryThread = new PostQueryThread(_query, connection);
+            Thread thread = new Thread(queryThread);
+            thread.start();
+            thread.join();
 
-        return queryThread.getResponse();
+            return queryThread.getResponse();
+        } else {
+            throw new NullPointerException("Connection is not established");
+        }
+    }
+
+    public void disconnect(){
+        new Thread(() -> connection.disconnect());
     }
 
     public static NetworkManager getInstance() {

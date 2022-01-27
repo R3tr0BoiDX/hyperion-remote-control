@@ -2,15 +2,18 @@ package com.r3tr0boidx.hyperionremotecontrol;
 
 import android.util.Log;
 
-public class Response {
-    private int responseCode;
-    private String responseMessage;
-    private String responseBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    public Response(int _code, String _message, String _body){
+public class Response {
+    private final int responseCode;
+    private final String responseMessage;
+    private final JSONObject responseBody;
+
+    public Response(int _code, String _message, String _body) throws JSONException {
         responseCode = _code;
         responseMessage = _message;
-        responseBody = _body;
+        responseBody = new JSONObject(_body);
     }
 
     public int getResponseCode() {
@@ -21,7 +24,7 @@ public class Response {
         return responseMessage;
     }
 
-    public String getResponseBody() {
+    public JSONObject getResponseBody() {
         return responseBody;
     }
 }
