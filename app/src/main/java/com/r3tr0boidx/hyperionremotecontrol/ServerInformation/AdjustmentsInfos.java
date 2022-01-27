@@ -4,35 +4,42 @@ import android.graphics.Color;
 import android.util.Log;
 
 public class AdjustmentsInfos {
-    private final boolean backlightColored;
-    private final int backlightThreshold;
-    private final int blue;                     //Color
-    private final int brightness;
-    private final int cyan;                     //Color
-    private final double gammaBlue;
-    private final double gammaGreen;
-    private final double gammaRed;
-    private final int green;                    //Color
-    private final String id;
-    private final int magenta;                  //Color
-    private final int red;                      //Color
-    private final int white;                    //Color
-    private final int yellow;                   //Color
 
-    public AdjustmentsInfos(boolean backlightColored,
-                            int backlightThreshold,
-                            int blue,
-                            int brightness,
-                            int cyan,
-                            double gammaBlue,
-                            double gammaGreen,
-                            double gammaRed,
-                            int green,
-                            String id,
-                            int magenta,
-                            int red,
-                            int white,
-                            int yellow) {
+    private final Boolean backlightColored;     //If true the backlight is colored, false it's white. Disabled for effect/color/image
+    private final int backlightThreshold;       //minimum: 0 maximum 100. Step of 1. (Minimum brightness!) Disabled for effect/color/image
+
+    private final int brightness;               //minimum: 0 maximum 100 step of 1
+    private int brightnessCompensation;   //minimum: 0 maximum 100 step of 1, optional
+
+    private final int red;      //Color
+    private final int yellow;   //Color
+    private final int green;    //Color
+    private final int cyan;     //Color
+    private final int blue;     //Color
+    private final int magenta;  //Color
+    private final int white;    //Color
+
+    private final double gammaBlue;     //minimum: 0.1 maximum 5.0 step of 0.1
+    private final double gammaGreen;    //minimum: 0.1 maximum 5.0 step of 0.1
+    private final double gammaRed;      //minimum: 0.1 maximum 5.0 step of 0.1
+
+    private final String id;    //Short identifier
+
+    public AdjustmentsInfos(
+            Boolean backlightColored,
+            int backlightThreshold,
+            int blue,
+            int brightness,
+            int cyan,
+            double gammaBlue,
+            double gammaGreen,
+            double gammaRed,
+            int green,
+            String id,
+            int magenta,
+            int red,
+            int white,
+            int yellow) {
         this.backlightColored = backlightColored;
         this.backlightThreshold = backlightThreshold;
         this.blue = blue;
@@ -50,76 +57,88 @@ public class AdjustmentsInfos {
     }
 
     public void print() {
-        Log.d("AdjustmentsInfos", "backlightColored" + backlightColored);
+        Log.d("AdjustmentsInfos", "===Mandatory===");
+        Log.d("AdjustmentsInfos", "backlightColored: " + backlightColored);
+        Log.d("AdjustmentsInfos", "backlightThreshold: " + backlightThreshold);
+        Log.d("AdjustmentsInfos", "blue: " + Color.valueOf(blue));
+        Log.d("AdjustmentsInfos", "brightness: " + brightness);
+        Log.d("AdjustmentsInfos", "brightness: " + brightness);
+        Log.d("AdjustmentsInfos", "cyan: " + Color.valueOf(cyan));
+        Log.d("AdjustmentsInfos", "gammaBlue: " + gammaBlue);
+        Log.d("AdjustmentsInfos", "gammaGreen: " + gammaGreen);
+        Log.d("AdjustmentsInfos", "gammaRed: " + gammaRed);
+        Log.d("AdjustmentsInfos", "green: " + Color.valueOf(green));
+        Log.d("AdjustmentsInfos", "id: " + id);
+        Log.d("AdjustmentsInfos", "magenta: " + Color.valueOf(magenta));
+        Log.d("AdjustmentsInfos", "red: " + Color.valueOf(red));
+        Log.d("AdjustmentsInfos", "white: " + Color.valueOf(white));
+        Log.d("AdjustmentsInfos", "yellow: " + Color.valueOf(yellow));
+
+        Log.d("AdjustmentsInfos", "===Optional===");
         Log.d("AdjustmentsInfos", "backlightThreshold" + backlightThreshold);
-        Log.d("AdjustmentsInfos", "blue" + Color.valueOf(blue));
-        Log.d("AdjustmentsInfos", "brightness" + brightness);
-        Log.d("AdjustmentsInfos", "brightness" + brightness);
-        Log.d("AdjustmentsInfos", "cyan" + Color.valueOf(cyan));
-        Log.d("AdjustmentsInfos", "gammaBlue" + gammaBlue);
-        Log.d("AdjustmentsInfos", "gammaGreen" + gammaGreen);
-        Log.d("AdjustmentsInfos", "gammaRed" + gammaRed);
-        Log.d("AdjustmentsInfos", "green" + Color.valueOf(green));
-        Log.d("AdjustmentsInfos", "id" + id);
-        Log.d("AdjustmentsInfos", "magenta" + Color.valueOf(magenta));
-        Log.d("AdjustmentsInfos", "red" + Color.valueOf(red));
-        Log.d("AdjustmentsInfos", "white" + Color.valueOf(white));
-        Log.d("AdjustmentsInfos", "yellow" + Color.valueOf(yellow));
     }
 
-    public boolean isBacklightColored() {
+    public void setBrightnessCompensation(Integer brightnessCompensation) {
+        this.brightnessCompensation = brightnessCompensation;
+    }
+
+    public Boolean getBacklightColored() {
         return backlightColored;
     }
 
-    public int getBacklightThreshold() {
+    public Integer getBacklightThreshold() {
         return backlightThreshold;
     }
 
-    public int getBlue() {
-        return blue;
-    }
-
-    public int getBrightness() {
+    public Integer getBrightness() {
         return brightness;
     }
 
-    public int getCyan() {
+    public Integer getBrightnessCompensation() {
+        return brightnessCompensation;
+    }
+
+    public Integer getRed() {
+        return red;
+    }
+
+    public Integer getYellow() {
+        return yellow;
+    }
+
+    public Integer getGreen() {
+        return green;
+    }
+
+    public Integer getCyan() {
         return cyan;
     }
 
-    public double getGammaBlue() {
+    public Integer getBlue() {
+        return blue;
+    }
+
+    public Integer getMagenta() {
+        return magenta;
+    }
+
+    public Integer getWhite() {
+        return white;
+    }
+
+    public Double getGammaBlue() {
         return gammaBlue;
     }
 
-    public double getGammaGreen() {
+    public Double getGammaGreen() {
         return gammaGreen;
     }
 
-    public double getGammaRed() {
+    public Double getGammaRed() {
         return gammaRed;
-    }
-
-    public int getGreen() {
-        return green;
     }
 
     public String getId() {
         return id;
-    }
-
-    public int getMagenta() {
-        return magenta;
-    }
-
-    public int getRed() {
-        return red;
-    }
-
-    public int getWhite() {
-        return white;
-    }
-
-    public int getYellow() {
-        return yellow;
     }
 }

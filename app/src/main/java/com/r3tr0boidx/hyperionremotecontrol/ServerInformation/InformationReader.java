@@ -43,16 +43,19 @@ public class InformationReader {
         }
     }
 
-    public static void readInfos(JSONObject _object) {
+    static void readInfos(JSONObject _object) {
         try {
             Log.d("base", _object.toString());
 
+
             JSONArray ar = _object.getJSONArray("adjustment");
             JSONObject ob = ar.getJSONObject(0); //Sind mehrer, schelife drüber mittels .length
-            AdjustmentsInfos adjustments = readAdjustments(ob);
+            AdjustmentsInfos adjustments = readAdjustment(ob);
             adjustments.print();
 
-            //ComponentsInfos components = readComponents(_object.getJSONArray("components"));
+
+            ComponentsInfos components = readComponents(_object.getJSONArray("components"));
+            components.print();
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -61,44 +64,56 @@ public class InformationReader {
 
     //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#effect-list
 
-    static AdjustmentsInfos readAdjustments(JSONObject _object){
+
+
+    //region Components
+    static AdjustmentsInfos[] readAdjustments(JSONArray _array) throws JSONException {
+        AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
+        for (int i = 0; i < adjustments.length; i++){
+            adjustments[i] = readAdjustment(_array.getJSONObject(i));
+        }
+        return adjustments;
+    }
+
+    static AdjustmentsInfos readAdjustment(JSONObject _object) {
         try {
             return new AdjustmentsInfos(
-                    _object.getBoolean("backlightColored"),
-                    _object.getInt("backlightThreshold"),
+                    JSONHelper.getBoolean(_object, "backlightColored"),
+                    JSONHelper.getInt(_object, "backlightThreshold"),
                     JSONHelper.castEntryToColor(_object.getJSONArray("blue")),
-                    _object.getInt("brightness"),
+                    JSONHelper.getInt(_object, "brightness"),
                     JSONHelper.castEntryToColor(_object.getJSONArray("cyan")),
-                    _object.getDouble("gammaBlue"),
-                    _object.getDouble("gammaGreen"),
-                    _object.getDouble("gammaRed"),
+                    JSONHelper.getDouble(_object, "gammaBlue"),
+                    JSONHelper.getDouble(_object, "gammaGreen"),
+                    JSONHelper.getDouble(_object, "gammaRed"),
                     JSONHelper.castEntryToColor(_object.getJSONArray("green")),
-                    _object.getString("id"),
+                    JSONHelper.getString(_object, "id"),
                     JSONHelper.castEntryToColor(_object.getJSONArray("magenta")),
                     JSONHelper.castEntryToColor(_object.getJSONArray("red")),
                     JSONHelper.castEntryToColor(_object.getJSONArray("white")),
                     JSONHelper.castEntryToColor(_object.getJSONArray("yellow"))
-                    );
-        } catch (Exception e){
+            );
+        } catch (Exception e) {
             Log.e("readComponents", "Can't read adjustments");
             //e.printStackTrace();
         }
         return null;
     }
+    //endregion
 
+    //region Components
     static ComponentsInfos readComponents(JSONArray _array) {
         try {
-            //For order see https://docs.hyperion-project.org/en/json/ServerInfo.html#components
-            //or ComponentsInfos.java
+            //For order see ComponentsInfos
             return new ComponentsInfos(
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(0)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(1)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(2)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(3)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(4)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(5)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(6)),
-                    JSONHelper.castEntryToBoolean(_array.getJSONObject(7))
+                    parseComponentEntryToBoolean(_array.getJSONObject(0)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(1)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(2)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(3)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(4)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(5)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(6)),
+                    parseComponentEntryToBoolean(_array.getJSONObject(7))
             );
         } catch (JSONException e) {
             Log.e("readComponents", "Can't read components");
@@ -106,4 +121,20 @@ public class InformationReader {
         }
         return null;
     }
+
+    public static Boolean parseComponentEntryToBoolean(JSONObject _entry) {
+        //Check if this returns a valid result...
+        String name = JSONHelper.getString(_entry, "name");
+
+        try {
+            if (name != null) {
+                return JSONHelper.castEntryToBoolean(_entry); //...if yes, then cast whatever it is...
+            }
+        } catch (JSONException e) {
+            Log.e("parseComponentEntryToBoolean", "Not able to cast " + name);
+            //e.printStackTrace();
+        }
+        return null; //...if not, return false
+    }
+    //endregion
 }
