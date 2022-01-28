@@ -7,6 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class EstablishConnectionThread implements Runnable{
 
@@ -43,14 +46,19 @@ public class EstablishConnectionThread implements Runnable{
         return getConnection(serverURL);
     }
 
-    //TODO: Not working right now - Hyperion bug
+    //TODO: Not working right now - SSL handshakes fails (Trust anchor for certification path not found.)
     public static HttpURLConnection getSecureConnection(Inet4Address _ip) throws IOException {
         URL serverURL = getServerURL(_ip, NetworkManager.HTTPS_PORT, "https");
         return getConnection(serverURL);
     }
 
     private static HttpURLConnection getConnection(URL _url) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) _url.openConnection();
+        HttpURLConnection con;
+        if (_url.getProtocol().equals("http")){
+            con = (HttpURLConnection) _url.openConnection();
+        } else {
+            con = (HttpsURLConnection) _url.openConnection();
+        }
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json;charset=utf-8");
         con.setRequestProperty("Accept", "application/json, text/plain, */*");

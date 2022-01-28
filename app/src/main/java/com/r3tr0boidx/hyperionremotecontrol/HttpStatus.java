@@ -30,6 +30,8 @@
  *
  */
 
+//TODO: Remove and replace with HttpURLConnection constants
+
 package com.r3tr0boidx.hyperionremotecontrol;
 
 public class HttpStatus {

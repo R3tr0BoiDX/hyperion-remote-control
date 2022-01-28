@@ -24,6 +24,10 @@ public class NetworkManager {
 
     //TODO: try-cath aus Frage umsetzten https://stackoverflow.com/q/3584210/7184809
 
+    public void establishConnection(Inet4Address _ip) throws InterruptedException {
+        establishConnection(_ip, false);
+    }
+
     public void establishConnection(Inet4Address _ip, boolean _unsecure) throws InterruptedException {
         EstablishConnectionThread establishConnectionThread = new EstablishConnectionThread(_ip, _unsecure);
         Thread thread = new Thread(establishConnectionThread);

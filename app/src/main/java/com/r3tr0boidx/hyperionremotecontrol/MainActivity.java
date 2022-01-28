@@ -31,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            ServerInfos infos = InformationReader.readResponse(getServerInfos());
+            /*ServerInfos infos = InformationReader.readResponse(getServerInfos());
             if (infos != null){
                 infos.print();
             }
+             */
 
-        } catch (IOException | InterruptedException | JSONException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

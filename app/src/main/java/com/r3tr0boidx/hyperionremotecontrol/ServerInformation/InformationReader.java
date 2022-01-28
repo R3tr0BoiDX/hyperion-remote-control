@@ -1,4 +1,4 @@
-//TODO: Subscribe, to not need to poll: https://docs.hyperion-project.org/en/json/subscribe.html
+//TODO: Subscribe, for no need to poll: https://docs.hyperion-project.org/en/json/subscribe.html
 
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 public class InformationReader {
 
+    //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#priorities
+
+    //region Basics
     public static ServerInfos readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpStatus.SC_OK) {
@@ -57,6 +60,7 @@ public class InformationReader {
         }
         return null;
     }
+    //endregion
 
     //region Misc
     static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object){
