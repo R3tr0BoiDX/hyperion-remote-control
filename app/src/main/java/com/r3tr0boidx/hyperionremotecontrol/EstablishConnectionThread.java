@@ -47,9 +47,9 @@ public class EstablishConnectionThread implements Runnable{
     }
 
     //TODO: Not working right now - SSL handshakes fails (Trust anchor for certification path not found.)
-    public static HttpURLConnection getSecureConnection(Inet4Address _ip) throws IOException {
+    public static HttpsURLConnection getSecureConnection(Inet4Address _ip) throws IOException {
         URL serverURL = getServerURL(_ip, NetworkManager.HTTPS_PORT, "https");
-        return getConnection(serverURL);
+        return (HttpsURLConnection) getConnection(serverURL);
     }
 
     private static HttpURLConnection getConnection(URL _url) throws IOException {
