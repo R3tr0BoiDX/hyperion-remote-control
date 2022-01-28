@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class JSONHelper {
 
-    public static final int INVALID_NUMBER = -1;
+    public static final int INVALID_NUMBER = Integer.MIN_VALUE;
 
     public static Boolean getBoolean(JSONObject _object, String _name){
         try {
@@ -51,27 +51,48 @@ public class JSONHelper {
         return null;
     }
 
+    public static JSONObject getObject(JSONObject _object, String _name){
+        try {
+            return _object.getJSONObject(_name);
+        } catch (JSONException e) {
+            Log.e("JSONHelper", "Didnt found " + _name);
+            //e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static JSONArray getArray(JSONObject _object, String _name){
+        try {
+            return _object.getJSONArray(_name);
+        } catch (JSONException e) {
+            Log.e("JSONHelper", "Didnt found " + _name);
+            //e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Boolean castEntryToBoolean(JSONObject _entry) throws JSONException {
         String entryState = _entry.getString("enabled");
         return Boolean.parseBoolean(entryState.toLowerCase());
     }
 
     public static int castEntryToColor(JSONArray _entry) {
+        if (_entry != null){
+            try {
+                if (_entry.length() == 3){
+                    int red = _entry.getInt(0);
+                    int green = _entry.getInt(1);
+                    int blue = _entry.getInt(2);
 
-        try {
-            if (_entry.length() == 3){
-                int red = _entry.getInt(0);
-                int green = _entry.getInt(1);
-                int blue = _entry.getInt(2);
-
-                return Color.rgb(red, green, blue);
-            } else {
-                throw new IllegalArgumentException("Not a color");
+                    return Color.rgb(red, green, blue);
+                } else {
+                    throw new IllegalArgumentException("Not a color");
+                }
+            } catch (JSONException e) {
+                Log.e("castEntryToColor", "Can't construct color");
+                //e.printStackTrace();
             }
-        } catch (JSONException e) {
-            Log.e("castEntryToColor", "Can't construct color");
-            //e.printStackTrace();
         }
-        return -1;
+        return INVALID_NUMBER;
     }
 }

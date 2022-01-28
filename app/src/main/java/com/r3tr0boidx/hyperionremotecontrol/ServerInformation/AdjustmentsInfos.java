@@ -3,6 +3,8 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 import android.graphics.Color;
 import android.util.Log;
 
+import org.json.JSONArray;
+
 public class AdjustmentsInfos {
 
     private final Boolean backlightColored;     //If true the backlight is colored, false it's white. Disabled for effect/color/image
@@ -76,6 +78,12 @@ public class AdjustmentsInfos {
 
         Log.d("AdjustmentsInfos", "===Optional===");
         Log.d("AdjustmentsInfos", "backlightThreshold" + backlightThreshold);
+    }
+
+    public static void printAll(AdjustmentsInfos[] _adjustments){
+        for (AdjustmentsInfos ad : _adjustments){
+            ad.print();
+        }
     }
 
     public void setBrightnessCompensation(Integer brightnessCompensation) {

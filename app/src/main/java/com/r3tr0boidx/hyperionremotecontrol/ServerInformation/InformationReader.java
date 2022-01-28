@@ -12,10 +12,10 @@ import org.json.JSONObject;
 
 public class InformationReader {
 
-    private final Response serverInfos;
+    private final Response serverResponse;
 
     public InformationReader() throws JSONException, InterruptedException {
-        serverInfos = getServerInfos();
+        serverResponse = getServerInfos();
         readResponse();
     }
 
@@ -27,10 +27,10 @@ public class InformationReader {
 
     void readResponse() {
         try {
-            if (serverInfos.getResponseCode() == HttpStatus.SC_OK) {
-                if (serverInfos.getResponseBody().getString("command").equals("serverinfo")) {
+            if (serverResponse.getResponseCode() == HttpStatus.SC_OK) {
+                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")) {
 
-                    JSONObject infos = serverInfos.getResponseBody().getJSONObject("info");
+                    JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
                     readInfos(infos);
 
                 } else {
@@ -47,26 +47,43 @@ public class InformationReader {
         try {
             Log.d("base", _object.toString());
 
-
-            JSONArray ar = _object.getJSONArray("adjustment");
-            JSONObject ob = ar.getJSONObject(0); //Sind mehrer, schelife drüber mittels .length
-            AdjustmentsInfos adjustments = readAdjustment(ob);
-            adjustments.print();
-
-
             ComponentsInfos components = readComponents(_object.getJSONArray("components"));
-            components.print();
+            AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
+            EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
+
+
+
+
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
         }
     }
 
-    //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#effect-list
+    //region Misc
+    
+    //end
 
+    //region Effects
+    static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
+        EffectInfos[] effects = new EffectInfos[_array.length()];
+        for (int i = 0; i < effects.length; i++){
+            effects[i] = readEffect(_array.getJSONObject(i));
+        }
+        return effects;
+    }
 
+    static EffectInfos readEffect(JSONObject _object){
+        return new EffectInfos(
+                JSONHelper.getObject(_object, "args"),
+                JSONHelper.getString(_object, "file"),
+                JSONHelper.getString(_object, "name"),
+                JSONHelper.getString(_object, "script")
+        );
+    }
+    //endregion
 
-    //region Components
+    //region Adjustments
     static AdjustmentsInfos[] readAdjustments(JSONArray _array) throws JSONException {
         AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
         for (int i = 0; i < adjustments.length; i++){
@@ -76,28 +93,22 @@ public class InformationReader {
     }
 
     static AdjustmentsInfos readAdjustment(JSONObject _object) {
-        try {
-            return new AdjustmentsInfos(
-                    JSONHelper.getBoolean(_object, "backlightColored"),
-                    JSONHelper.getInt(_object, "backlightThreshold"),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("blue")),
-                    JSONHelper.getInt(_object, "brightness"),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("cyan")),
-                    JSONHelper.getDouble(_object, "gammaBlue"),
-                    JSONHelper.getDouble(_object, "gammaGreen"),
-                    JSONHelper.getDouble(_object, "gammaRed"),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("green")),
-                    JSONHelper.getString(_object, "id"),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("magenta")),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("red")),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("white")),
-                    JSONHelper.castEntryToColor(_object.getJSONArray("yellow"))
-            );
-        } catch (Exception e) {
-            Log.e("readComponents", "Can't read adjustments");
-            //e.printStackTrace();
-        }
-        return null;
+        return new AdjustmentsInfos(
+                JSONHelper.getBoolean(_object, "backlightColored"),
+                JSONHelper.getInt(_object, "backlightThreshold"),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "blue")),
+                JSONHelper.getInt(_object, "brightness"),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "cyan")),
+                JSONHelper.getDouble(_object, "gammaBlue"),
+                JSONHelper.getDouble(_object, "gammaGreen"),
+                JSONHelper.getDouble(_object, "gammaRed"),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "green")),
+                JSONHelper.getString(_object, "id"),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "magenta")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "red")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "white")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "yellow"))
+        );
     }
     //endregion
 
