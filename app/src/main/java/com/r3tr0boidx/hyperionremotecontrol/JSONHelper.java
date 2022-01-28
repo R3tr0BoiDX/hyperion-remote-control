@@ -9,8 +9,6 @@ import org.json.JSONObject;
 
 public class JSONHelper {
 
-    public static final int INVALID_NUMBER = Integer.MIN_VALUE;
-
     public static Boolean getBoolean(JSONObject _object, String _name){
         try {
             return _object.getBoolean(_name);
@@ -21,24 +19,24 @@ public class JSONHelper {
         return null;
     }
 
-    public static int getInt(JSONObject _object, String _name){
+    public static Integer getInt(JSONObject _object, String _name){
         try {
             return _object.getInt(_name);
         } catch (JSONException e) {
             Log.e("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
-        return INVALID_NUMBER;
+        return null;
     }
 
-    public static double getDouble(JSONObject _object, String _name){
+    public static Double getDouble(JSONObject _object, String _name){
         try {
             return _object.getDouble(_name);
         } catch (JSONException e) {
             Log.e("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
-        return INVALID_NUMBER;
+        return null;
     }
 
     public static String getString(JSONObject _object, String _name){
@@ -76,7 +74,7 @@ public class JSONHelper {
         return Boolean.parseBoolean(entryState.toLowerCase());
     }
 
-    public static int castEntryToColor(JSONArray _entry) {
+    public static Integer castEntryToColor(JSONArray _entry) {
         if (_entry != null){
             try {
                 if (_entry.length() == 3){
@@ -93,6 +91,6 @@ public class JSONHelper {
                 //e.printStackTrace();
             }
         }
-        return INVALID_NUMBER;
+        return null;
     }
 }

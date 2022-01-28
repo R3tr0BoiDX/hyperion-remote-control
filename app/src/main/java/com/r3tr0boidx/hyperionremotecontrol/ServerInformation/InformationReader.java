@@ -13,6 +13,7 @@ import org.json.JSONObject;
 public class InformationReader {
 
     //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#priorities
+    //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 
     //region Basics
     public static ServerInfos readResponse(Response serverResponse) {
@@ -36,7 +37,7 @@ public class InformationReader {
 
     static ServerInfos readInfos(JSONObject _object) {
         try {
-            Log.d("base", _object.toString());
+            Log.d("JSON Base", _object.toString());
 
             ComponentsInfos components = readComponents(_object.getJSONArray("components"));
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
@@ -52,8 +53,8 @@ public class InformationReader {
                     effects,
                     ledMappingType,
                     videoMode,
-                    hostname);
-
+                    hostname
+            );
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -92,7 +93,8 @@ public class InformationReader {
                 JSONHelper.getObject(_object, "args"),
                 JSONHelper.getString(_object, "file"),
                 JSONHelper.getString(_object, "name"),
-                JSONHelper.getString(_object, "script")
+                JSONHelper.getString(_object, "script"),
+                JSONHelper.getString(_object, "imageData")
         );
     }
     //endregion
@@ -108,20 +110,25 @@ public class InformationReader {
 
     static AdjustmentsInfos readAdjustment(JSONObject _object) {
         return new AdjustmentsInfos(
-                JSONHelper.getBoolean(_object, "backlightColored"),
-                JSONHelper.getInt(_object, "backlightThreshold"),
+                JSONHelper.getString(_object, "id"),
+
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "red")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "green")),
                 JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "blue")),
-                JSONHelper.getInt(_object, "brightness"),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "yellow")),
                 JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "cyan")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "magenta")),
+                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "white")),
+
                 JSONHelper.getDouble(_object, "gammaBlue"),
                 JSONHelper.getDouble(_object, "gammaGreen"),
                 JSONHelper.getDouble(_object, "gammaRed"),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "green")),
-                JSONHelper.getString(_object, "id"),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "magenta")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "red")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "white")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "yellow"))
+
+                JSONHelper.getInt(_object, "backlightThreshold"),
+                JSONHelper.getBoolean(_object, "backlightColored"),
+
+                JSONHelper.getInt(_object, "brightness"),
+                JSONHelper.getInt(_object, "brightnessCompensation")
         );
     }
     //endregion

@@ -12,11 +12,13 @@ public class ComponentsInfos {
     private final Boolean v4l;              //Video4Linux USB capture device
     private final Boolean ledDevice;        //Led device start/stops output of the configured led device
 
+    /*
     private Boolean color;          //All colors that has been set belongs to this component
     private Boolean effect;         //All effects belongs to this component
     private Boolean image;          //All single/solid images belongs to this. NOT for streaming
     private Boolean flatBuffer;     //All image stream sources from flatbuffer server
     private Boolean protoBuffer;    //All image stream sources from Protobuffer server
+     */
 
     public ComponentsInfos(Boolean all,
                            Boolean smoothing,
@@ -37,7 +39,7 @@ public class ComponentsInfos {
     }
 
     public void print() {
-        Log.d("ComponentsInfos", "===Mandatory===");
+        Log.d("ComponentsInfos", "===Required===");
         Log.d("ComponentsInfos", "all: " + all);
         Log.d("ComponentsInfos", "smoothing: " + smoothing);
         Log.d("ComponentsInfos", "blackborder: " + blackBorder);
@@ -47,14 +49,17 @@ public class ComponentsInfos {
         Log.d("ComponentsInfos", "v4l: " + v4l);
         Log.d("ComponentsInfos", "ledDevice: " + ledDevice);
 
+        /*
         Log.d("ComponentsInfos", "===Optional===");
         Log.d("ComponentsInfos", "color: " + color);
         Log.d("ComponentsInfos", "effect: " + effect);
         Log.d("ComponentsInfos", "image: " + image);
         Log.d("ComponentsInfos", "flatbuffer: " + flatBuffer);
         Log.d("ComponentsInfos", "protobuffer: " + protoBuffer);
+         */
     }
 
+    /*
     public void setColor(Boolean color) {
         this.color = color;
     }
@@ -74,6 +79,27 @@ public class ComponentsInfos {
     public void setProtoBuffer(Boolean protoBuffer) {
         this.protoBuffer = protoBuffer;
     }
+
+    public Boolean getColor() {
+        return color;
+    }
+
+    public Boolean getEffect() {
+        return effect;
+    }
+
+    public Boolean getImage() {
+        return image;
+    }
+
+    public Boolean getFlatBuffer() {
+        return flatBuffer;
+    }
+
+    public Boolean getProtoBuffer() {
+        return protoBuffer;
+    }
+     */
 
     public Boolean getAll() {
         return all;
@@ -105,25 +131,5 @@ public class ComponentsInfos {
 
     public Boolean getLedDevice() {
         return ledDevice;
-    }
-
-    public Boolean getColor() {
-        return color;
-    }
-
-    public Boolean getEffect() {
-        return effect;
-    }
-
-    public Boolean getImage() {
-        return image;
-    }
-
-    public Boolean getFlatBuffer() {
-        return flatBuffer;
-    }
-
-    public Boolean getProtoBuffer() {
-        return protoBuffer;
     }
 }
