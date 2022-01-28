@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -24,16 +25,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView text = findViewById(R.id.textView);
+        //TextView text = findViewById(R.id.textView);
 
         try {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            InformationReader information = new InformationReader();
+            ServerInfos infos = InformationReader.readResponse(getServerInfos());
+            if (infos != null){
+                infos.print();
+            }
 
         } catch (IOException | InterruptedException | JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    //Somehow network, somehow JSON and somehow helper. Don't know where to put this
+    static Response getServerInfos() throws JSONException, InterruptedException {
+        JSONObject json = new JSONObject();
+        json.put("command", "serverinfo");
+        return NetworkManager.getInstance().postQuery(json);
     }
 }

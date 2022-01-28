@@ -12,26 +12,13 @@ import org.json.JSONObject;
 
 public class InformationReader {
 
-    private final Response serverResponse;
-
-    public InformationReader() throws JSONException, InterruptedException {
-        serverResponse = getServerInfos();
-        readResponse();
-    }
-
-    static Response getServerInfos() throws JSONException, InterruptedException {
-        JSONObject json = new JSONObject();
-        json.put("command", "serverinfo");
-        return NetworkManager.getInstance().postQuery(json);
-    }
-
-    void readResponse() {
+    public static ServerInfos readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpStatus.SC_OK) {
                 if (serverResponse.getResponseBody().getString("command").equals("serverinfo")) {
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
-                    readInfos(infos);
+                    return readInfos(infos);
 
                 } else {
                     Log.w("readInformations", "Received no Server Informations");
@@ -41,9 +28,10 @@ public class InformationReader {
             Log.e("readInformations", "Not able to parse received data");
             e.printStackTrace();
         }
+        return null;
     }
 
-    static void readInfos(JSONObject _object) {
+    static ServerInfos readInfos(JSONObject _object) {
         try {
             Log.d("base", _object.toString());
 
@@ -51,18 +39,40 @@ public class InformationReader {
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
 
+            ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
+            ServerInfos.VideoModes videoMode = readVideoMode(_object);
+            String hostname = readHostname(_object);
 
-
+            return new ServerInfos(
+                    components,
+                    adjusts,
+                    effects,
+                    ledMappingType,
+                    videoMode,
+                    hostname);
 
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
         }
+        return null;
     }
 
     //region Misc
-    
-    //end
+    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object){
+        String type = JSONHelper.getString(_object,"imageToLedMappingType");
+        return ServerInfos.castStringToLedMappingTyp(type);
+    }
+
+    static ServerInfos.VideoModes readVideoMode(JSONObject _object){
+        String mode = JSONHelper.getString(_object,"videomode");
+        return ServerInfos.castStringToVideoMode(mode);
+    }
+
+    static String readHostname(JSONObject _object){
+        return JSONHelper.getString(_object, "hostname");
+    }
+    //endregion
 
     //region Effects
     static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
