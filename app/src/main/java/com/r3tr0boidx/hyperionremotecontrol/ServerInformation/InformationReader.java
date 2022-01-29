@@ -10,10 +10,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
+//https://github.com/hyperion-project/hyperion.ng/blob/master/libsrc/api/JsonAPI.cpp
+
 public class InformationReader {
 
     //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#priorities
-    //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 
     //region Basics
     public static ServerInfos readResponse(Response serverResponse) {
@@ -42,10 +44,12 @@ public class InformationReader {
             ComponentsInfos components = readComponents(_object.getJSONArray("components"));
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
+            PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
             String hostname = readHostname(_object);
+            Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
 
             return new ServerInfos(
                     components,
@@ -53,7 +57,9 @@ public class InformationReader {
                     effects,
                     ledMappingType,
                     videoMode,
-                    hostname
+                    hostname,
+                    priorities,
+                    prioritiesAutoSelect
             );
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
@@ -63,19 +69,34 @@ public class InformationReader {
     }
     //endregion
 
-    //region Misc
-    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object){
-        String type = JSONHelper.getString(_object,"imageToLedMappingType");
-        return ServerInfos.castStringToLedMappingTyp(type);
+    //region Priorities
+    static PriorityInfo[] readPriorities(JSONArray _array) throws JSONException {
+        PriorityInfo[] priorities = new PriorityInfo[_array.length()];
+        for (int i = 0; i < priorities.length; i++){
+            priorities[i] = readPriority(_array.getJSONObject(i));
+        }
+        return priorities;
     }
 
-    static ServerInfos.VideoModes readVideoMode(JSONObject _object){
-        String mode = JSONHelper.getString(_object,"videomode");
-        return ServerInfos.castStringToVideoMode(mode);
-    }
+    static PriorityInfo readPriority(JSONObject _object){
 
-    static String readHostname(JSONObject _object){
-        return JSONHelper.getString(_object, "hostname");
+        //Get only RGB, since HSV is depending on RGB in Hyperion code - no need to get that as well
+        JSONObject values = JSONHelper.getObject(_object, "value");
+        JSONArray rgb = null;
+        if (values != null){
+            rgb = JSONHelper.getArray(values, "RGB");
+        }
+
+        return new PriorityInfo(
+                JSONHelper.getInteger(_object, "priority"),
+                JSONHelper.getInteger(_object, "duration_ms"),
+                JSONHelper.getString(_object, "owner"),
+                JSONHelper.getString(_object, "componentId"),
+                JSONHelper.getString(_object, "origin"),
+                JSONHelper.getBoolean(_object, "active"),
+                JSONHelper.getBoolean(_object, "visible"),
+                JSONHelper.castArrayToColor(rgb)
+        );
     }
     //endregion
 
@@ -93,8 +114,7 @@ public class InformationReader {
                 JSONHelper.getObject(_object, "args"),
                 JSONHelper.getString(_object, "file"),
                 JSONHelper.getString(_object, "name"),
-                JSONHelper.getString(_object, "script"),
-                JSONHelper.getString(_object, "imageData")
+                JSONHelper.getString(_object, "script")
         );
     }
     //endregion
@@ -112,23 +132,23 @@ public class InformationReader {
         return new AdjustmentsInfos(
                 JSONHelper.getString(_object, "id"),
 
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "red")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "green")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "blue")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "yellow")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "cyan")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "magenta")),
-                JSONHelper.castEntryToColor(JSONHelper.getArray(_object, "white")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "red")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "green")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "blue")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "yellow")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "cyan")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "magenta")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "white")),
 
                 JSONHelper.getDouble(_object, "gammaBlue"),
                 JSONHelper.getDouble(_object, "gammaGreen"),
                 JSONHelper.getDouble(_object, "gammaRed"),
 
-                JSONHelper.getInt(_object, "backlightThreshold"),
+                JSONHelper.getInteger(_object, "backlightThreshold"),
                 JSONHelper.getBoolean(_object, "backlightColored"),
 
-                JSONHelper.getInt(_object, "brightness"),
-                JSONHelper.getInt(_object, "brightnessCompensation")
+                JSONHelper.getInteger(_object, "brightness"),
+                JSONHelper.getInteger(_object, "brightnessCompensation")
         );
     }
     //endregion
@@ -167,6 +187,26 @@ public class InformationReader {
             //e.printStackTrace();
         }
         return null; //...if not, return false
+    }
+    //endregion
+
+    //region Misc
+    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object){
+        String type = JSONHelper.getString(_object,"imageToLedMappingType");
+        return ServerInfos.castStringToLedMappingTyp(type);
+    }
+
+    static ServerInfos.VideoModes readVideoMode(JSONObject _object){
+        String mode = JSONHelper.getString(_object,"videomode");
+        return ServerInfos.castStringToVideoMode(mode);
+    }
+
+    static String readHostname(JSONObject _object){
+        return JSONHelper.getString(_object, "hostname");
+    }
+
+    static Boolean readPrioritiesAutoSelect(JSONObject _object){
+        return JSONHelper.getBoolean(_object, "priorities_autoselect");
     }
     //endregion
 }

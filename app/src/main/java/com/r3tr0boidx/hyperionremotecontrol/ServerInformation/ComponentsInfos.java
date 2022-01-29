@@ -2,7 +2,17 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.util.Log;
 
+//TODO: Rebuild in a way, that entries are a enum. Then adapt to data structure to other Info classes
+
+
 public class ComponentsInfos {
+
+    //New structure
+    /*
+    private final enum type;
+    private final Boolean enabeld;
+     */
+
     private final Boolean all;              //Hyperion Instance itself
     private final Boolean smoothing;        //Smoothing
     private final Boolean blackBorder;      //Detect black borders
@@ -12,22 +22,15 @@ public class ComponentsInfos {
     private final Boolean v4l;              //Video4Linux USB capture device
     private final Boolean ledDevice;        //Led device start/stops output of the configured led device
 
-    /*
-    private Boolean color;          //All colors that has been set belongs to this component
-    private Boolean effect;         //All effects belongs to this component
-    private Boolean image;          //All single/solid images belongs to this. NOT for streaming
-    private Boolean flatBuffer;     //All image stream sources from flatbuffer server
-    private Boolean protoBuffer;    //All image stream sources from Protobuffer server
-     */
-
-    public ComponentsInfos(Boolean all,
-                           Boolean smoothing,
-                           Boolean blackBorder,
-                           Boolean forwarder,
-                           Boolean boblightServer,
-                           Boolean grabber,
-                           Boolean v4l,
-                           Boolean ledDevice) {
+    public ComponentsInfos(
+            Boolean all,
+            Boolean smoothing,
+            Boolean blackBorder,
+            Boolean forwarder,
+            Boolean boblightServer,
+            Boolean grabber,
+            Boolean v4l,
+            Boolean ledDevice) {
         this.all = all;
         this.smoothing = smoothing;
         this.blackBorder = blackBorder;
@@ -48,58 +51,7 @@ public class ComponentsInfos {
         Log.d("ComponentsInfos", "grabber: " + grabber);
         Log.d("ComponentsInfos", "v4l: " + v4l);
         Log.d("ComponentsInfos", "ledDevice: " + ledDevice);
-
-        /*
-        Log.d("ComponentsInfos", "===Optional===");
-        Log.d("ComponentsInfos", "color: " + color);
-        Log.d("ComponentsInfos", "effect: " + effect);
-        Log.d("ComponentsInfos", "image: " + image);
-        Log.d("ComponentsInfos", "flatbuffer: " + flatBuffer);
-        Log.d("ComponentsInfos", "protobuffer: " + protoBuffer);
-         */
     }
-
-    /*
-    public void setColor(Boolean color) {
-        this.color = color;
-    }
-
-    public void setEffect(Boolean effect) {
-        this.effect = effect;
-    }
-
-    public void setImage(Boolean image) {
-        this.image = image;
-    }
-
-    public void setFlatBuffer(Boolean flatBuffer) {
-        this.flatBuffer = flatBuffer;
-    }
-
-    public void setProtoBuffer(Boolean protoBuffer) {
-        this.protoBuffer = protoBuffer;
-    }
-
-    public Boolean getColor() {
-        return color;
-    }
-
-    public Boolean getEffect() {
-        return effect;
-    }
-
-    public Boolean getImage() {
-        return image;
-    }
-
-    public Boolean getFlatBuffer() {
-        return flatBuffer;
-    }
-
-    public Boolean getProtoBuffer() {
-        return protoBuffer;
-    }
-     */
 
     public Boolean getAll() {
         return all;

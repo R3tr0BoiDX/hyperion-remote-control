@@ -13,17 +13,17 @@ public class JSONHelper {
         try {
             return _object.getBoolean(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
     }
 
-    public static Integer getInt(JSONObject _object, String _name){
+    public static Integer getInteger(JSONObject _object, String _name){
         try {
             return _object.getInt(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
@@ -33,7 +33,7 @@ public class JSONHelper {
         try {
             return _object.getDouble(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
@@ -43,7 +43,7 @@ public class JSONHelper {
         try {
             return _object.getString(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
@@ -53,7 +53,7 @@ public class JSONHelper {
         try {
             return _object.getJSONObject(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
@@ -63,7 +63,7 @@ public class JSONHelper {
         try {
             return _object.getJSONArray(_name);
         } catch (JSONException e) {
-            Log.e("JSONHelper", "Didnt found " + _name);
+            Log.w("JSONHelper", "Didnt found " + _name);
             //e.printStackTrace();
         }
         return null;
@@ -74,7 +74,7 @@ public class JSONHelper {
         return Boolean.parseBoolean(entryState.toLowerCase());
     }
 
-    public static Integer castEntryToColor(JSONArray _entry) {
+    public static Integer castArrayToColor(JSONArray _entry) {
         if (_entry != null){
             try {
                 if (_entry.length() == 3){
@@ -87,7 +87,7 @@ public class JSONHelper {
                     throw new IllegalArgumentException("Not a color");
                 }
             } catch (JSONException e) {
-                Log.e("castEntryToColor", "Can't construct color");
+                Log.w("castEntryToColor", "Can't construct color");
                 //e.printStackTrace();
             }
         }
