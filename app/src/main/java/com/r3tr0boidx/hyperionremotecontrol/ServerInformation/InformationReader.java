@@ -10,18 +10,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+
 //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 //https://github.com/hyperion-project/hyperion.ng/blob/master/libsrc/api/JsonAPI.cpp
 
 public class InformationReader {
 
-    //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#priorities
+    //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#instance
 
     //region Basics
     public static ServerInfos readResponse(Response serverResponse) {
         try {
-            if (serverResponse.getResponseCode() == HttpStatus.SC_OK) {
-                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")) {
+            if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")
+                && serverResponse.getResponseBody().getBoolean("success")) {
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
                     return readInfos(infos);
