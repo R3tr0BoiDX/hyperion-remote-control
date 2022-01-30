@@ -13,6 +13,7 @@ public class ServerInfos {
     private final Boolean prioritiesAutoSelect;
     private final InstanceInfos[] instances;
 
+    //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
             ComponentInfos[] components,
             AdjustmentsInfos[] adjustments,

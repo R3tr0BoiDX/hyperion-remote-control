@@ -47,6 +47,10 @@ public class InformationReader {
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
             PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
             InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
+            LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
+
+            Log.d("LEDs", LEDInfo.concatenatePrintableString(leds));
+
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -68,6 +72,25 @@ public class InformationReader {
             e.printStackTrace();
         }
         return null;
+    }
+    //endregion
+
+    //region LED
+    static LEDInfo[] readLEDs(JSONArray _array) throws JSONException {
+        LEDInfo[] leds = new LEDInfo[_array.length()];
+        for (int i = 0; i < leds.length; i++){
+            leds[i] = readLED(_array.getJSONObject(i));
+        }
+        return leds;
+    }
+
+    private static LEDInfo readLED(JSONObject _object) {
+        return new LEDInfo(
+                JSONHelper.getDouble(_object, "hmax"),
+                JSONHelper.getDouble(_object, "hmin"),
+                JSONHelper.getDouble(_object, "vmax"),
+                JSONHelper.getDouble(_object, "vmin")
+        );
     }
     //endregion
 
