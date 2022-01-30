@@ -23,7 +23,7 @@ public class InformationReader {
     public static ServerInfos readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")
+                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //
                 && serverResponse.getResponseBody().getBoolean("success")) {
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
@@ -44,7 +44,7 @@ public class InformationReader {
         try {
             Log.d("JSON Base", _object.toString());
 
-            ComponentsInfos components = readComponents(_object.getJSONArray("components"));
+            ComponentInfos[] components = readComponents(_object.getJSONArray("components"));
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
             PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
@@ -157,39 +157,25 @@ public class InformationReader {
     //endregion
 
     //region Components
-    static ComponentsInfos readComponents(JSONArray _array) {
-        try {
-            //For order see ComponentsInfos
-            return new ComponentsInfos(
-                    parseComponentEntryToBoolean(_array.getJSONObject(0)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(1)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(2)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(3)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(4)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(5)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(6)),
-                    parseComponentEntryToBoolean(_array.getJSONObject(7))
-            );
-        } catch (JSONException e) {
-            Log.e("readComponents", "Can't read components");
-            //e.printStackTrace();
+    static ComponentInfos[] readComponents(JSONArray _array) throws JSONException {
+        ComponentInfos[] component = new ComponentInfos[_array.length()];
+        for (int i = 0; i < component.length; i++){
+            component[i] = readComponent(_array.getJSONObject(i));
         }
-        return null;
+        return component;
     }
 
-    public static Boolean parseComponentEntryToBoolean(JSONObject _entry) {
-        //Check if this returns a valid result...
-        String name = JSONHelper.getString(_entry, "name");
-
-        try {
-            if (name != null) {
-                return JSONHelper.castEntryToBoolean(_entry); //...if yes, then cast whatever it is...
-            }
-        } catch (JSONException e) {
-            Log.e("parseComponentEntryToBoolean", "Not able to cast " + name);
-            //e.printStackTrace();
+    static ComponentInfos readComponent(JSONObject _object) {
+        String type = JSONHelper.getString(_object, "name");
+        if (type != null){
+            return new ComponentInfos(
+                    ComponentInfos.Component.valueOf(type),
+                    JSONHelper.getBoolean(_object, "enabled")
+            );
+        } else {
+            Log.e("readComponents", "Can't read component");
+            return null;
         }
-        return null; //...if not, return false
     }
     //endregion
 

@@ -3,7 +3,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 import android.util.Log;
 
 public class ServerInfos {
-    private final ComponentsInfos components;
+    private final ComponentInfos[] components;
     private final AdjustmentsInfos[] adjustments;
     private final EffectInfos[] effects;
     private final ImageToLedMappingTypes ledMappingType;
@@ -13,7 +13,7 @@ public class ServerInfos {
     private final Boolean prioritiesAutoSelect;
 
     public ServerInfos(
-            ComponentsInfos components,
+            ComponentInfos[] components,
             AdjustmentsInfos[] adjustments,
             EffectInfos[] effects,
             ImageToLedMappingTypes ledMappingType,
@@ -33,7 +33,7 @@ public class ServerInfos {
 
     //TODO: Refactor to toString() method
     public void print(){
-        components.print();
+        ComponentInfos.printAll(components);
         AdjustmentsInfos.printAll(adjustments);
         EffectInfos.printAll(effects);
         PriorityInfo.printAll(priorities);
@@ -74,7 +74,7 @@ public class ServerInfos {
         return null;
     }
 
-    public ComponentsInfos getComponents() {
+    public ComponentInfos[] getComponents() {
         return components;
     }
 
