@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 //https://github.com/hyperion-project/hyperion.ng/blob/master/libsrc/api/JsonAPI.cpp
@@ -48,9 +50,7 @@ public class InformationReader {
             PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
             InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
             LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
-
-            Log.d("LEDs", LEDInfo.concatenatePrintableString(leds));
-
+            SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -66,7 +66,8 @@ public class InformationReader {
                     hostname,
                     priorities,
                     prioritiesAutoSelect,
-                    instances);
+                    instances,
+                    leds, sessions);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -74,8 +75,40 @@ public class InformationReader {
         return null;
     }
     //endregion
+    static SessionInfo[] readSessions(JSONArray _array) throws JSONException {
+        SessionInfo[] sessions = new SessionInfo[_array.length()];
+        for (int i = 0; i < sessions.length; i++){
+            sessions[i] = readSession(_array.getJSONObject(i));
+        }
+        return sessions;
+    }
 
-    //region LED
+    private static SessionInfo readSession(JSONObject _object) {
+
+        //Convert received address to URL object
+        URL url = null;
+        String address = JSONHelper.getString(_object, "address");
+        if (address != null){
+            try {
+                url = new URL(address);
+            } catch (MalformedURLException e) {
+                Log.w("readSession", "Can't read address");
+                //e.printStackTrace();
+            }
+        }
+
+        return new SessionInfo(
+                url,
+                JSONHelper.getString(_object, "domain"),
+                JSONHelper.getString(_object, "host"),
+                JSONHelper.getString(_object, "name"),
+                JSONHelper.getInteger(_object, "port"),
+                JSONHelper.getString(_object, "type")
+        );
+    }
+    //region Sessions
+
+    //region LEDs
     static LEDInfo[] readLEDs(JSONArray _array) throws JSONException {
         LEDInfo[] leds = new LEDInfo[_array.length()];
         for (int i = 0; i < leds.length; i++){

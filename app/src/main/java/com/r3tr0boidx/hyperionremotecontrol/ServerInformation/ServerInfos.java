@@ -12,6 +12,8 @@ public class ServerInfos {
     private final PriorityInfo[] priorities;
     private final Boolean prioritiesAutoSelect;
     private final InstanceInfos[] instances;
+    private final LEDInfo[] leds;
+    private final SessionInfo[] sessions;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -23,7 +25,9 @@ public class ServerInfos {
             String hostname,
             PriorityInfo[] priorities,
             Boolean prioritiesAutoSelect,
-            InstanceInfos[] instances) {
+            InstanceInfos[] instances,
+            LEDInfo[] leds,
+            SessionInfo[] sessions) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -33,16 +37,19 @@ public class ServerInfos {
         this.priorities = priorities;
         this.prioritiesAutoSelect = prioritiesAutoSelect;
         this.instances = instances;
+        this.leds = leds;
+        this.sessions = sessions;
     }
 
     //TODO: Refactor to toString() method
-    public void print(){
+    public void print() {
         ComponentInfos.printAll(components);
         AdjustmentsInfos.printAll(adjustments);
         EffectInfos.printAll(effects);
         PriorityInfo.printAll(priorities);
 
         Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
+        Log.d("LEDInfo", LEDInfo.concatenatePrintableString(leds));
 
         Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
         Log.d("ServerInfos", "videoMode: " + videoMode.toString());
@@ -50,9 +57,9 @@ public class ServerInfos {
         Log.d("ServerInfos", "prioritiesAutoSelect: " + prioritiesAutoSelect);
     }
 
-    static ImageToLedMappingTypes castStringToLedMappingTyp(String _type){
-        if (_type != null){
-            switch (_type){
+    static ImageToLedMappingTypes castStringToLedMappingTyp(String _type) {
+        if (_type != null) {
+            switch (_type) {
                 case "unicolor_mean":
                     return ImageToLedMappingTypes.unicolor_mean;
                 case "multicolor_mean":
@@ -64,9 +71,9 @@ public class ServerInfos {
         return null;
     }
 
-    static VideoModes castStringToVideoMode(String _mode){
-        if (_mode != null){
-            switch (_mode){
+    static VideoModes castStringToVideoMode(String _mode) {
+        if (_mode != null) {
+            switch (_mode) {
                 case "2D":
                     return VideoModes.two_D;
                 case "3DSBS":
@@ -116,12 +123,20 @@ public class ServerInfos {
         return instances;
     }
 
-    enum ImageToLedMappingTypes{
+    public LEDInfo[] getLeds() {
+        return leds;
+    }
+
+    public SessionInfo[] getSessions() {
+        return sessions;
+    }
+
+    enum ImageToLedMappingTypes {
         unicolor_mean,
         multicolor_mean
     }
 
-    enum VideoModes{
+    enum VideoModes {
         two_D,
         three_D_SBS,
         three_D_TAB
