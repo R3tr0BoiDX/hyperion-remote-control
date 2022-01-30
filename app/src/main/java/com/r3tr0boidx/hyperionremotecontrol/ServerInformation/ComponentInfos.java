@@ -37,14 +37,15 @@ public class ComponentInfos {
         return state;
     }
 
+    //Warning: Must be all upper case, else Component.valueOf("String") isn't working
     enum Component{
-        all,                //Hyperion Instance itself
-        smoothing,          //Smoothing
-        blackborder,        //Detect black borders
-        forwarder,          //JSON/Proto forwarder
-        boblightServer,     //Boblight server
-        grabber,            //Platform capture
-        v4l,                //Video4Linux USB capture device
-        ledDevice           //Led device start/stops output of the configured led device
+        ALL,                //Hyperion Instance itself
+        SMOOTHING,          //Smoothing
+        BLACKBORDER,        //Detect black borders
+        FORWARDER,          //JSON/Proto forwarder
+        BOBLIGHTSERVER,     //Boblight server
+        GRABBER,            //Platform capture
+        V4L,                //Video4Linux USB capture device
+        LEDDEVICE           //Led device start/stops output of the configured led device
     }
 }

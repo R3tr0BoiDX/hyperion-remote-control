@@ -23,12 +23,12 @@ public class InformationReader {
     public static ServerInfos readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //
-                && serverResponse.getResponseBody().getBoolean("success")) {
+                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
+                && serverResponse.getResponseBody().getBoolean("success")) {                    //Check if it was successful
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
+                    Log.d("JSON Base", infos.toString());
                     return readInfos(infos);
-
                 } else {
                     Log.w("readInformations", "Received no Server Informations");
                 }
@@ -42,12 +42,11 @@ public class InformationReader {
 
     static ServerInfos readInfos(JSONObject _object) {
         try {
-            Log.d("JSON Base", _object.toString());
-
             ComponentInfos[] components = readComponents(_object.getJSONArray("components"));
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
             PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
+            InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -62,13 +61,31 @@ public class InformationReader {
                     videoMode,
                     hostname,
                     priorities,
-                    prioritiesAutoSelect
-            );
+                    prioritiesAutoSelect,
+                    instances);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
         }
         return null;
+    }
+    //endregion
+
+    //region Instances
+    static InstanceInfos[] readInstances(JSONArray _array) throws JSONException {
+        InstanceInfos[] instances = new InstanceInfos[_array.length()];
+        for (int i = 0; i < instances.length; i++){
+            instances[i] = readInstance(_array.getJSONObject(i));
+        }
+        return instances;
+    }
+
+    private static InstanceInfos readInstance(JSONObject _object) {
+        return new InstanceInfos(
+                JSONHelper.getString(_object, "friendly_name"),
+                JSONHelper.getInteger(_object, "instance"),
+                JSONHelper.getBoolean(_object, "running")
+        );
     }
     //endregion
 
@@ -168,14 +185,27 @@ public class InformationReader {
     static ComponentInfos readComponent(JSONObject _object) {
         String type = JSONHelper.getString(_object, "name");
         if (type != null){
-            return new ComponentInfos(
-                    ComponentInfos.Component.valueOf(type),
-                    JSONHelper.getBoolean(_object, "enabled")
-            );
+            if (componentNameExists(type)){
+                return new ComponentInfos(
+                        ComponentInfos.Component.valueOf(type.toUpperCase()),
+                        JSONHelper.getBoolean(_object, "enabled")
+                );
+            } else {
+                Log.w("readComponents", "Component name doesn't exists");
+            }
         } else {
-            Log.e("readComponents", "Can't read component");
-            return null;
+            Log.w("readComponents", "Can't read component");
         }
+        return null;
+    }
+
+    public static boolean componentNameExists(String test) {
+        for (ComponentInfos.Component c : ComponentInfos.Component.values()) {
+            if (c.name().equals(test)) {
+                return true;
+            }
+        }
+        return false;
     }
     //endregion
 

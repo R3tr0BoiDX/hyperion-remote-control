@@ -11,6 +11,7 @@ public class ServerInfos {
     private final String hostname;
     private final PriorityInfo[] priorities;
     private final Boolean prioritiesAutoSelect;
+    private final InstanceInfos[] instances;
 
     public ServerInfos(
             ComponentInfos[] components,
@@ -20,7 +21,8 @@ public class ServerInfos {
             VideoModes videoMode,
             String hostname,
             PriorityInfo[] priorities,
-            Boolean prioritiesAutoSelect) {
+            Boolean prioritiesAutoSelect,
+            InstanceInfos[] instances) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -29,6 +31,7 @@ public class ServerInfos {
         this.hostname = hostname;
         this.priorities = priorities;
         this.prioritiesAutoSelect = prioritiesAutoSelect;
+        this.instances = instances;
     }
 
     //TODO: Refactor to toString() method
@@ -37,6 +40,8 @@ public class ServerInfos {
         AdjustmentsInfos.printAll(adjustments);
         EffectInfos.printAll(effects);
         PriorityInfo.printAll(priorities);
+
+        Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
 
         Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
         Log.d("ServerInfos", "videoMode: " + videoMode.toString());
@@ -104,6 +109,10 @@ public class ServerInfos {
 
     public Boolean getPrioritiesAutoSelect() {
         return prioritiesAutoSelect;
+    }
+
+    public InstanceInfos[] getInstances() {
+        return instances;
     }
 
     enum ImageToLedMappingTypes{
