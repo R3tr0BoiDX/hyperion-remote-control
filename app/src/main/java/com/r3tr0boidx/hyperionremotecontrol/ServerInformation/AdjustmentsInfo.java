@@ -4,8 +4,6 @@ import android.graphics.Color;
 
 public class AdjustmentsInfo {
 
-    //TODO: Check if colors arent null
-
     private final String id;    //Short identifier
 
     private final Integer red;      //Color

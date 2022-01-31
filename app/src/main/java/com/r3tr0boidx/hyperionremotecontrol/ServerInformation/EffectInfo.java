@@ -1,9 +1,15 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import com.r3tr0boidx.hyperionremotecontrol.Helper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EffectInfo {
+import java.util.Iterator;
+import java.util.List;
 
+public class EffectInfo {
     protected final JSONObject args;  //Arguments for effects
     protected final String file;      //Where the JSON file of the effect is saved
     protected final String name;      //Name of the effect
@@ -25,6 +31,8 @@ public class EffectInfo {
         } else {
             systemEffect = null;
         }
+
+        //readEffectArgs(args);
     }
 
     public static String concatenatePrintableString(EffectInfo[] _effects) {
@@ -78,11 +86,36 @@ public class EffectInfo {
         return systemEffect;
     }
 
-    /* === Because of args ===
-     * TODO: To parse unknown JSON structure: https://stackoverflow.com/a/19630271/7184809
-     * TODO: To cast object from unknown type to proper one: https://stackoverflow.com/a/16094284/7184809
-     * TODO: To actually use proper data type: https://stackoverflow.com/a/10531550/7184809
-     *
-     * TODO: Or this approach: https://stackoverflow.com/questions/15920212/how-to-check-the-type-of-a-value-from-a-jsonobject
+    //Works - do something with it
+    /*
+    void readEffectArgs(JSONObject _args){
+        Iterator<String> keys = _args.keys();
+        try {
+            while(keys.hasNext()) {
+                String key = keys.next();
+                Object item = _args.get(key);
+
+                if (item instanceof Boolean) {
+                }
+
+                if (item instanceof Integer) {
+                }
+
+                if (item instanceof Double) {
+                }
+
+                if (item instanceof String) {
+                }
+
+                if (item instanceof JSONArray) {
+                }
+
+                if (item instanceof JSONObject) {
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
      */
 }
