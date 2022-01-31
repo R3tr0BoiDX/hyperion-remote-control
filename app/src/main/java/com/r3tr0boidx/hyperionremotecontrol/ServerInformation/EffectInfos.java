@@ -6,15 +6,15 @@ import org.json.JSONObject;
 
 public class EffectInfos {
 
-    private final JSONObject args;  //Arguments for effects
-    private final String file;      //Where the JSON file of the effect is saved
-    private final String name;      //Name of the effect
-    private final String script;    //Where the Python file with the effect itself is saved
+    protected final JSONObject args;  //Arguments for effects
+    protected final String file;      //Where the JSON file of the effect is saved
+    protected final String name;      //Name of the effect
+    protected final String script;    //Where the Python file with the effect itself is saved
 
-    private final boolean systemEffect;
     /* if "file" begins with : it's a system provided effect,
      * whereas if the path begins with /, it's a user created effect
-    */
+     */
+    protected final Boolean systemEffect;
 
     public EffectInfos(JSONObject args, String file, String name, String script) {
         this.args = args;
@@ -22,7 +22,11 @@ public class EffectInfos {
         this.name = name;
         this.script = script;
 
-        systemEffect = isSystemEffect(file);
+        if (file != null){
+            systemEffect = isSystemEffect(file);
+        } else {
+            systemEffect = null;
+        }
     }
 
     public void print(){
@@ -36,13 +40,25 @@ public class EffectInfos {
         Log.d("EffectInfos",  "systemEffect: " + systemEffect);
     }
 
-    public static void printAll(EffectInfos[] _effects){
+    public static String concatenatePrintableString(EffectInfos[] _effects){
+        StringBuilder sb = new StringBuilder();
         for (EffectInfos ef : _effects){
-            ef.print();
+            sb.append(ef.printableString()).append(System.lineSeparator());
         }
+        return sb.toString();
     }
 
-    private boolean isSystemEffect(String _file){
+    String printableString() {
+        return "===EffectInfos===" + System.lineSeparator() +
+                "args: " + args.toString() + System.lineSeparator() +
+                "file: " + file + System.lineSeparator() +
+                "name: " + name + System.lineSeparator() +
+                "script: " + script + System.lineSeparator() +
+                "===Derived===" + System.lineSeparator() +
+                "systemEffect: " + systemEffect + System.lineSeparator();
+    }
+
+    protected Boolean isSystemEffect(String _file){
         return (_file.charAt(0) == ':');
     }
 
@@ -62,6 +78,9 @@ public class EffectInfos {
         return script;
     }
 
+    public Boolean getSystemEffect() {
+        return systemEffect;
+    }
 
     /* === Because of args ===
      * TODO: To parse unknown JSON structure: https://stackoverflow.com/a/19630271/7184809

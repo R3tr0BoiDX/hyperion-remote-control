@@ -2,7 +2,6 @@
 
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
-import android.graphics.Color;
 import android.util.Log;
 
 import com.r3tr0boidx.hyperionremotecontrol.*;
@@ -12,8 +11,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 //https://github.com/hyperion-project/hyperion.ng/blob/master/libsrc/api/JsonAPI.cpp
@@ -42,7 +43,6 @@ public class InformationReader {
 
     /* TODO: Things left
      * activeEffects
-     * activeLedColor
      * cec
      * grabbers
      * ledDevices
@@ -58,13 +58,10 @@ public class InformationReader {
             InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
             LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
             SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
-
             Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
-            for (Integer i : activeColors){
-                if (i != null){
-                    Helper.Log(Color.valueOf(i) + "");
-                }
-            }
+
+            ActiveEffectInfo[] activeEffects = readActiveEffects(_object.getJSONArray("activeEffects"));
+            Helper.Log(ActiveEffectInfo.concatenatePrintableString(activeEffects));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -82,7 +79,8 @@ public class InformationReader {
                     prioritiesAutoSelect,
                     instances,
                     leds,
-                    sessions);
+                    sessions,
+                    activeColors);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -109,6 +107,14 @@ public class InformationReader {
         }
         return null;
     }
+
+    static ActiveEffectInfo[] readActiveEffects(JSONArray _array) throws JSONException {
+        ActiveEffectInfo[] effects = new ActiveEffectInfo[_array.length()];
+        for (int i = 0; i < effects.length; i++) {
+            effects[i] = (ActiveEffectInfo) readEffect(_array.getJSONObject(i), true);
+        }
+        return effects;
+    }
     //endregion
 
     //region Sessions
@@ -123,19 +129,19 @@ public class InformationReader {
     private static SessionInfo readSession(JSONObject _object) {
 
         //Convert received address to URL object
-        URL url = null;
+        Inet4Address ip = null;
         String address = JSONHelper.getString(_object, "address");
         if (address != null) {
             try {
-                url = new URL(address);
-            } catch (MalformedURLException e) {
+                ip = (Inet4Address) Inet4Address.getByName(address);
+            } catch (UnknownHostException e) {
                 Log.w("readSession", "Can't read address");
                 e.printStackTrace();
             }
         }
 
         return new SessionInfo(
-                url,
+                ip,
                 JSONHelper.getString(_object, "domain"),
                 JSONHelper.getString(_object, "host"),
                 JSONHelper.getString(_object, "name"),
@@ -216,18 +222,28 @@ public class InformationReader {
     static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
         EffectInfos[] effects = new EffectInfos[_array.length()];
         for (int i = 0; i < effects.length; i++) {
-            effects[i] = readEffect(_array.getJSONObject(i));
+            effects[i] = readEffect(_array.getJSONObject(i), false);
         }
         return effects;
     }
 
-    static EffectInfos readEffect(JSONObject _object) {
-        return new EffectInfos(
-                JSONHelper.getObject(_object, "args"),
-                JSONHelper.getString(_object, "file"),
-                JSONHelper.getString(_object, "name"),
-                JSONHelper.getString(_object, "script")
-        );
+    static EffectInfos readEffect(JSONObject _object, boolean _active) {
+        if (_active){
+            return new ActiveEffectInfo(
+                    JSONHelper.getObject(_object, "args"),
+                    JSONHelper.getString(_object, "name"),
+                    JSONHelper.getString(_object, "script"),
+                    JSONHelper.getInteger(_object, "priority"),
+                    JSONHelper.getInteger(_object, "timeout")
+            );
+        } else {
+            return new EffectInfos(
+                    JSONHelper.getObject(_object, "args"),
+                    JSONHelper.getString(_object, "file"),
+                    JSONHelper.getString(_object, "name"),
+                    JSONHelper.getString(_object, "script")
+            );
+        }
     }
     //endregion
 

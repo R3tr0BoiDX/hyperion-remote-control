@@ -1,5 +1,6 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.graphics.Color;
 import android.util.Log;
 
 public class ServerInfos {
@@ -14,6 +15,7 @@ public class ServerInfos {
     private final InstanceInfos[] instances;
     private final LEDInfo[] leds;
     private final SessionInfo[] sessions;
+    private final Integer[] activeColors;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -27,7 +29,8 @@ public class ServerInfos {
             Boolean prioritiesAutoSelect,
             InstanceInfos[] instances,
             LEDInfo[] leds,
-            SessionInfo[] sessions) {
+            SessionInfo[] sessions,
+            Integer[] activeColors) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -39,22 +42,34 @@ public class ServerInfos {
         this.instances = instances;
         this.leds = leds;
         this.sessions = sessions;
+        this.activeColors = activeColors;
     }
 
     //TODO: Refactor to toString() method
     public void print() {
         ComponentInfos.printAll(components);
         AdjustmentsInfos.printAll(adjustments);
-        EffectInfos.printAll(effects);
+        Log.d("EffectInfos", EffectInfos.concatenatePrintableString(effects));
         PriorityInfo.printAll(priorities);
 
         Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
         Log.d("LEDInfo", LEDInfo.concatenatePrintableString(leds));
+        Log.d("ActiveLedColor", concatenatePrintableActiveColorString(activeColors));
+
 
         Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
         Log.d("ServerInfos", "videoMode: " + videoMode.toString());
         Log.d("ServerInfos", "hostname: " + hostname);
         Log.d("ServerInfos", "prioritiesAutoSelect: " + prioritiesAutoSelect);
+    }
+
+    public static String concatenatePrintableActiveColorString(Integer[] _colors) {
+        StringBuilder sb = new StringBuilder();
+        for (Integer i : _colors) {
+             sb.append("===ActiveLedColor===") .append(System.lineSeparator());
+             sb.append("activeColor: ").append(Color.valueOf(i)).append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 
     static ImageToLedMappingTypes castStringToLedMappingTyp(String _type) {
