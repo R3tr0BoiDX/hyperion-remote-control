@@ -26,16 +26,16 @@ public class ColorCommand implements ControlCommand {
 
     /**
      * Create a new command, to control the color
-     *
-     * @param priority The priority of the command. Recommended is 50, min. is 2, max. is 99
+     * The official Hyperion documentation recommends priorities between 2 and 99, optimally 50
+     * @param priority The priority of the command. Recommended is 50, min. is 1, max. is 253
      * @param color    The color, that is to set.
      */
     public ColorCommand(int priority, int color) {
-        if (priority > 1 && priority < 100) {
+        if (priority > 0 && priority < 254) {
             this.priority = priority;
             this.color = color;
         } else {
-            throw new IllegalArgumentException("Priority was to high or low. Min. is 2, max. is 99. Given priority: " + priority);
+            throw new IllegalArgumentException("Priority was to high or low. Min. is 1, max. is 253. Given priority: " + priority);
         }
     }
 
