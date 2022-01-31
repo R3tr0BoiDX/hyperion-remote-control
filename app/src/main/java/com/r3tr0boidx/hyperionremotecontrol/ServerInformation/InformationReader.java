@@ -39,10 +39,6 @@ public class InformationReader {
         return null;
     }
 
-    /* TODO: Things left
-     * transform
-     */
-
     static ServerInfos readInfos(JSONObject _object) {
         try {
             //TODO: Should use JSONHelper.getArray as fell to be null-"safe"
@@ -56,6 +52,7 @@ public class InformationReader {
             SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
             ActiveEffectInfo[] activeEffects = readActiveEffects(_object.getJSONArray("activeEffects"));
             GrabbersInfo grabbers = readGrabbers(_object.getJSONObject("grabbers"));
+            TransformInfo[] transforms = readTransfroms(_object.getJSONArray("transform"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -81,13 +78,55 @@ public class InformationReader {
                     activeEffects,
                     cec,
                     grabbers,
-                    ledDevices);
+                    ledDevices,
+                    transforms);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
         }
         return null;
     }
+    //endregion
+    static TransformInfo[] readTransfroms(JSONArray _array) throws JSONException {
+        TransformInfo[] transform = new TransformInfo[_array.length()];
+        for (int i = 0; i < transform.length; i++) {
+            transform[i] = readTransfrom(_array.getJSONObject(i));
+        }
+        return transform;
+    }
+
+    private static TransformInfo readTransfrom(JSONObject _object) {
+        return new TransformInfo(
+                JSONHelper.getString(_object, "id"),
+                JSONHelper.getInteger(_object, "luminanceGain"),
+                JSONHelper.getInteger(_object, "luminanceMinimum"),
+                JSONHelper.getInteger(_object, "saturationGain"),
+                JSONHelper.getInteger(_object, "saturationLGain"),
+                JSONHelper.getInteger(_object, "valueGain"),
+                readDoubleArray(JSONHelper.getArray(_object, "blacklevel")),
+                readDoubleArray(JSONHelper.getArray(_object, "whitelevel")),
+                readDoubleArray(JSONHelper.getArray(_object, "gamma")),
+                readDoubleArray(JSONHelper.getArray(_object, "threshold"))
+                );
+    }
+
+    private static Double[] readDoubleArray(JSONArray _array){
+        if (_array != null){
+            Double[] result = new Double[_array.length()];
+            try {
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = _array.getDouble(i);
+                }
+            } catch (JSONException e) {
+                Log.w("readDoubleArray", "Can't read " + _array.toString());
+                //e.printStackTrace();
+            }
+            return result;
+        }
+        return new Double[0];
+    }
+    //region Transform
+
     //endregion
 
     //region Grabbers

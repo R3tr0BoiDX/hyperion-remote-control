@@ -1,7 +1,5 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
-import android.util.Log;
-
 import org.json.JSONObject;
 
 public class EffectInfos {
@@ -22,43 +20,41 @@ public class EffectInfos {
         this.name = name;
         this.script = script;
 
-        if (file != null){
+        if (file != null) {
             systemEffect = isSystemEffect(file);
         } else {
             systemEffect = null;
         }
     }
 
-    public void print(){
-        Log.d("EffectInfos", "===Required===");
-        Log.d("EffectInfos", "args: " + args.toString());
-        Log.d("EffectInfos", "file: " + file);
-        Log.d("EffectInfos", "name: " + name);
-        Log.d("EffectInfos", "script: " + script);
-
-        Log.d("EffectInfos", "===Derived===");
-        Log.d("EffectInfos",  "systemEffect: " + systemEffect);
-    }
-
-    public static String concatenatePrintableString(EffectInfos[] _effects){
+    public static String concatenatePrintableString(EffectInfos[] _effects) {
         StringBuilder sb = new StringBuilder();
-        for (EffectInfos ef : _effects){
-            sb.append(ef.printableString()).append(System.lineSeparator());
+        for (EffectInfos ef : _effects) {
+            sb.append(ef.printableString(false)).append(System.lineSeparator());
         }
         return sb.toString();
     }
 
-    String printableString() {
-        return "===EffectInfos===" + System.lineSeparator() +
-                "args: " + args.toString() + System.lineSeparator() +
+    String printableString(boolean _active) {
+        String printable;
+
+        if (_active) {
+            printable = "===ActiveEffectInfo===" + System.lineSeparator();
+        } else {
+            printable = "===EffectInfos===" + System.lineSeparator();
+        }
+
+        printable += "args: " + args.toString() + System.lineSeparator() +
                 "file: " + file + System.lineSeparator() +
                 "name: " + name + System.lineSeparator() +
                 "script: " + script + System.lineSeparator() +
                 "===Derived===" + System.lineSeparator() +
                 "systemEffect: " + systemEffect + System.lineSeparator();
+
+        return printable;
     }
 
-    protected Boolean isSystemEffect(String _file){
+    protected Boolean isSystemEffect(String _file) {
         return (_file.charAt(0) == ':');
     }
 

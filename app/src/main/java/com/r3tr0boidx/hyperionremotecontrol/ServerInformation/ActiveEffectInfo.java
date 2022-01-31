@@ -27,7 +27,7 @@ public class ActiveEffectInfo extends EffectInfos {
     }
 
     String printableString() {
-        String printable = super.printableString();
+        String printable = super.printableString(true);
         printable += "===Active Attributes===" + System.lineSeparator() +
                 "priority: " + priority + System.lineSeparator() +
                 "timeout: " + timeout + System.lineSeparator();

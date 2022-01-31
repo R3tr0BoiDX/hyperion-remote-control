@@ -31,18 +31,6 @@ public class ComponentInfos {
                 "state: " + state + System.lineSeparator();
     }
 
-    public static void printAll(ComponentInfos[] _components) {
-        for (ComponentInfos co : _components) {
-            co.print();
-        }
-    }
-
-    public void print() {
-        Log.d("ComponentsInfos", "===Required===");
-        Log.d("ComponentsInfos", "type: " + type.toString());
-        Log.d("ComponentsInfos", "state: " + state);
-    }
-
     public Component getType() {
         return type;
     }

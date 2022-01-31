@@ -1,7 +1,6 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public class ServerInfos {
     //TODO: Should represent order of JSON response
@@ -21,6 +20,7 @@ public class ServerInfos {
     private final Boolean cec;
     private final GrabbersInfo grabbers;
     private final String[] ledDevices;
+    private final TransformInfo[] transforms;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -39,7 +39,8 @@ public class ServerInfos {
             ActiveEffectInfo[] activeEffects,
             Boolean cec,
             GrabbersInfo grabbers,
-            String[] ledDevices) {
+            String[] ledDevices,
+            TransformInfo[] transforms) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -56,6 +57,7 @@ public class ServerInfos {
         this.cec = cec;
         this.grabbers = grabbers;
         this.ledDevices = ledDevices;
+        this.transforms = transforms;
     }
 
     public String concatenatePrintableString() {
@@ -69,6 +71,7 @@ public class ServerInfos {
                 concatenatePrintableActiveColorString(activeColors) + System.lineSeparator() +
                 ActiveEffectInfo.concatenatePrintableString(activeEffects) + System.lineSeparator() +
                 GrabbersInfo.concatenatePrintableString(grabbers) + System.lineSeparator() +
+                TransformInfo.concatenatePrintableString(transforms) + System.lineSeparator() +
 
                 "===Misc===" + System.lineSeparator() +
                 "ledMappingType: " + ledMappingType.toString() + System.lineSeparator() +
