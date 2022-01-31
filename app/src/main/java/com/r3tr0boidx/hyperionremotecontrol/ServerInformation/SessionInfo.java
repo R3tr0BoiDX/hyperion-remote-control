@@ -1,7 +1,16 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.util.Log;
+
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.Inet4Address;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 public class SessionInfo {
 
@@ -14,7 +23,7 @@ public class SessionInfo {
     private final Integer port;
     private final String type;
 
-    public SessionInfo(
+    SessionInfo(
             Inet4Address address,
             String domain,
             String host,
@@ -29,6 +38,41 @@ public class SessionInfo {
         this.type = type;
     }
 
+    static SessionInfo[] readSessions(JSONArray _array) throws JSONException {
+        if (_array != null){
+            SessionInfo[] sessions = new SessionInfo[_array.length()];
+            for (int i = 0; i < sessions.length; i++) {
+                sessions[i] = readSession(_array.getJSONObject(i));
+            }
+            return sessions;
+        }
+        return new SessionInfo[0];
+    }
+
+    private static SessionInfo readSession(JSONObject _object) {
+
+        //Convert received address to URL object
+        Inet4Address ip = null;
+        String address = JSONHelper.getString(_object, "address");
+        if (address != null) {
+            try {
+                ip = (Inet4Address) Inet4Address.getByName(address);
+            } catch (UnknownHostException e) {
+                Log.w("readSession", "Can't read address");
+                e.printStackTrace();
+            }
+        }
+
+        return new SessionInfo(
+                ip,
+                JSONHelper.getString(_object, "domain"),
+                JSONHelper.getString(_object, "host"),
+                JSONHelper.getString(_object, "name"),
+                JSONHelper.getInteger(_object, "port"),
+                JSONHelper.getString(_object, "type")
+        );
+    }
+
     public static String concatenatePrintableString(SessionInfo[] _instances) {
         StringBuilder sb = new StringBuilder();
         for (SessionInfo se : _instances) {
@@ -37,7 +81,7 @@ public class SessionInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         return "===InstanceInfo===" + System.lineSeparator() +
                 "address: " + address + System.lineSeparator() +
                 "domain: " + domain + System.lineSeparator() +

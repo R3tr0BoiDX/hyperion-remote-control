@@ -1,17 +1,45 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class GrabbersInfo {
     private final String[] active;
     private final String[] available;
 
-    public GrabbersInfo(
+    GrabbersInfo(
             String[] active,
             String[] available) {
         this.active = active;
         this.available = available;
     }
 
-    public static String concatenatePrintableString(GrabbersInfo _grabbers) {
+    static GrabbersInfo readGrabbers(JSONObject _object){
+        return new GrabbersInfo(
+                readStringArray(_object, "active"),
+                readStringArray(_object, "available")
+        );
+    }
+
+    private static String[] readStringArray(JSONObject _object, String _name){
+        String[] result = new String[0];
+
+        try {
+            JSONArray array = _object.getJSONArray(_name);
+            result = new String[array.length()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = array.getString(i);
+            }
+        } catch (Exception e) {
+            Log.w("readStringArray", "Can't read " + _object.toString());
+            //e.printStackTrace();
+        }
+        return result;
+    }
+
+    static String concatenatePrintableString(GrabbersInfo _grabbers) {
         StringBuilder sb = new StringBuilder();
         sb.append("===GrabbersInfo===").append(System.lineSeparator());
 

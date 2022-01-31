@@ -1,5 +1,13 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.util.Log;
+
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ComponentInfo {
 
     private final Component type;
@@ -10,6 +18,43 @@ public class ComponentInfo {
             Boolean state) {
         this.type = type;
         this.state = state;
+    }
+
+    static ComponentInfo[] readComponents(JSONArray _array) throws JSONException {
+        if (_array != null){
+            ComponentInfo[] component = new ComponentInfo[_array.length()];
+            for (int i = 0; i < component.length; i++) {
+                component[i] = readComponent(_array.getJSONObject(i));
+            }
+            return component;
+        }
+        return new ComponentInfo[0];
+    }
+
+    static ComponentInfo readComponent(JSONObject _object) {
+        String type = JSONHelper.getString(_object, "name");
+        if (type != null) {
+            if (componentNameExists(type)) {
+                return new ComponentInfo(
+                        ComponentInfo.Component.valueOf(type.toUpperCase()),
+                        JSONHelper.getBoolean(_object, "enabled")
+                );
+            } else {
+                Log.w("readComponents", "Component name doesn't exists");
+            }
+        } else {
+            Log.w("readComponents", "Can't read component");
+        }
+        return null;
+    }
+
+    public static boolean componentNameExists(String test) {
+        for (ComponentInfo.Component c : ComponentInfo.Component.values()) {
+            if (c.name().equals(test)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String concatenatePrintableString(ComponentInfo[] _component) {

@@ -1,5 +1,11 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LEDInfo {
     private final Double hmax;
     private final Double hmin;
@@ -11,6 +17,26 @@ public class LEDInfo {
         this.hmin = hmin;
         this.vmax = vmax;
         this.vmin = vmin;
+    }
+
+    static LEDInfo[] readLEDs(JSONArray _array) throws JSONException {
+        if (_array != null){
+            LEDInfo[] leds = new LEDInfo[_array.length()];
+            for (int i = 0; i < leds.length; i++) {
+                leds[i] = readLED(_array.getJSONObject(i));
+            }
+            return leds;
+        }
+        return new LEDInfo[0];
+    }
+
+    private static LEDInfo readLED(JSONObject _object) {
+        return new LEDInfo(
+                JSONHelper.getDouble(_object, "hmax"),
+                JSONHelper.getDouble(_object, "hmin"),
+                JSONHelper.getDouble(_object, "vmax"),
+                JSONHelper.getDouble(_object, "vmin")
+        );
     }
 
     public static String concatenatePrintableString(LEDInfo[] _instances) {

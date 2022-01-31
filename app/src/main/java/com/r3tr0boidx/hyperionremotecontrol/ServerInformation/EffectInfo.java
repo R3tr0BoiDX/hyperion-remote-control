@@ -1,6 +1,7 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import com.r3tr0boidx.hyperionremotecontrol.Helper;
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +34,36 @@ public class EffectInfo {
         }
 
         //readEffectArgs(args);
+    }
+
+    static EffectInfo[] readEffects(JSONArray _array) throws JSONException {
+        if (_array != null){
+            EffectInfo[] effects = new EffectInfo[_array.length()];
+            for (int i = 0; i < effects.length; i++) {
+                effects[i] = readEffect(_array.getJSONObject(i), false);
+            }
+            return effects;
+        }
+        return new EffectInfo[0];
+    }
+
+    static EffectInfo readEffect(JSONObject _object, boolean _active) {
+        if (_active){
+            return new ActiveEffectInfo(
+                    JSONHelper.getObject(_object, "args"),
+                    JSONHelper.getString(_object, "name"),
+                    JSONHelper.getString(_object, "script"),
+                    JSONHelper.getInteger(_object, "priority"),
+                    JSONHelper.getInteger(_object, "timeout")
+            );
+        } else {
+            return new EffectInfo(
+                    JSONHelper.getObject(_object, "args"),
+                    JSONHelper.getString(_object, "file"),
+                    JSONHelper.getString(_object, "name"),
+                    JSONHelper.getString(_object, "script")
+            );
+        }
     }
 
     public static String concatenatePrintableString(EffectInfo[] _effects) {

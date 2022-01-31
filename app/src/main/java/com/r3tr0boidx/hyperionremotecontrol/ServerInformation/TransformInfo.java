@@ -1,5 +1,13 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.util.Log;
+
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class TransformInfo {
     private final String id;
     private final Integer luminanceGain;
@@ -13,7 +21,7 @@ public class TransformInfo {
     private final Double[] gamma;
     private final Double[] threshold;
 
-    public TransformInfo(
+    TransformInfo(
             String id,
             Integer luminanceGain,
             Integer luminanceMinimum,
@@ -36,6 +44,48 @@ public class TransformInfo {
         this.threshold = threshold;
     }
 
+    static TransformInfo[] readTransfroms(JSONArray _array) throws JSONException {
+        if (_array != null){
+            TransformInfo[] transform = new TransformInfo[_array.length()];
+            for (int i = 0; i < transform.length; i++) {
+                transform[i] = readTransfrom(_array.getJSONObject(i));
+            }
+            return transform;
+        }
+        return new TransformInfo[0];
+    }
+
+    private static TransformInfo readTransfrom(JSONObject _object) {
+        return new TransformInfo(
+                JSONHelper.getString(_object, "id"),
+                JSONHelper.getInteger(_object, "luminanceGain"),
+                JSONHelper.getInteger(_object, "luminanceMinimum"),
+                JSONHelper.getInteger(_object, "saturationGain"),
+                JSONHelper.getInteger(_object, "saturationLGain"),
+                JSONHelper.getInteger(_object, "valueGain"),
+                readDoubleArray(JSONHelper.getArray(_object, "blacklevel")),
+                readDoubleArray(JSONHelper.getArray(_object, "whitelevel")),
+                readDoubleArray(JSONHelper.getArray(_object, "gamma")),
+                readDoubleArray(JSONHelper.getArray(_object, "threshold"))
+        );
+    }
+
+    private static Double[] readDoubleArray(JSONArray _array){
+        if (_array != null){
+            Double[] result = new Double[_array.length()];
+            try {
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = _array.getDouble(i);
+                }
+            } catch (JSONException e) {
+                Log.w("readDoubleArray", "Can't read " + _array);
+                //e.printStackTrace();
+            }
+            return result;
+        }
+        return new Double[0];
+    }
+
     public static String concatenatePrintableString(TransformInfo[] _transform) {
         StringBuilder sb = new StringBuilder();
         for (TransformInfo in : _transform) {
@@ -44,7 +94,7 @@ public class TransformInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         StringBuilder stringBuilderBlackLevel = new StringBuilder();
         for (Double d : blackLevel){
             stringBuilderBlackLevel.append(d).append(" ");
@@ -73,10 +123,10 @@ public class TransformInfo {
                 "saturationLGain: " + saturationLGain + System.lineSeparator() +
                 "valueGain: " + valueGain + System.lineSeparator() +
 
-                "blackLevel: " + stringBuilderBlackLevel.toString() + System.lineSeparator() +
-                "whiteLevel: " + stringBuilderWhiteLevel.toString() + System.lineSeparator() +
-                "gamma: " + stringBuilderGamma.toString() + System.lineSeparator() +
-                "threshold: " + stringBuilderThreshold.toString() + System.lineSeparator();
+                "blackLevel: " + stringBuilderBlackLevel + System.lineSeparator() +
+                "whiteLevel: " + stringBuilderWhiteLevel + System.lineSeparator() +
+                "gamma: " + stringBuilderGamma + System.lineSeparator() +
+                "threshold: " + stringBuilderThreshold + System.lineSeparator();
     }
 
     public String getId() {

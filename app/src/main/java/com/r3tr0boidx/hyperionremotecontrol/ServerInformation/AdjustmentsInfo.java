@@ -2,6 +2,12 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
 
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AdjustmentsInfo {
 
     private final String id;    //Short identifier
@@ -55,6 +61,41 @@ public class AdjustmentsInfo {
         this.backlightColored = backlightColored;
         this.brightness = brightness;
         this.brightnessCompensation = brightnessCompensation;
+    }
+
+    static AdjustmentsInfo[] readAdjustments(JSONArray _array) throws JSONException {
+        if (_array != null){
+            AdjustmentsInfo[] adjustments = new AdjustmentsInfo[_array.length()];
+            for (int i = 0; i < adjustments.length; i++) {
+                adjustments[i] = readAdjustment(_array.getJSONObject(i));
+            }
+            return adjustments;
+        }
+        return new AdjustmentsInfo[0];
+    }
+
+    static AdjustmentsInfo readAdjustment(JSONObject _object) {
+        return new AdjustmentsInfo(
+                JSONHelper.getString(_object, "id"),
+
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "red")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "green")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "blue")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "yellow")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "cyan")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "magenta")),
+                JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "white")),
+
+                JSONHelper.getDouble(_object, "gammaBlue"),
+                JSONHelper.getDouble(_object, "gammaGreen"),
+                JSONHelper.getDouble(_object, "gammaRed"),
+
+                JSONHelper.getInteger(_object, "backlightThreshold"),
+                JSONHelper.getBoolean(_object, "backlightColored"),
+
+                JSONHelper.getInteger(_object, "brightness"),
+                JSONHelper.getInteger(_object, "brightnessCompensation")
+        );
     }
 
     public static String concatenatePrintableString(AdjustmentsInfo[] _adjustments) {

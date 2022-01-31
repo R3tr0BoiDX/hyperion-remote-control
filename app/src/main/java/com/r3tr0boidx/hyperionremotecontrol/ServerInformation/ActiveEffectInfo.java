@@ -1,5 +1,7 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ActiveEffectInfo extends EffectInfo {
@@ -7,7 +9,7 @@ public class ActiveEffectInfo extends EffectInfo {
     private final Integer priority;
     private final Integer timeout;
 
-    public ActiveEffectInfo(
+    ActiveEffectInfo(
             JSONObject args,
             String name,
             String script,
@@ -16,6 +18,17 @@ public class ActiveEffectInfo extends EffectInfo {
         super(args, null, name, script);
         this.priority = priority;
         this.timeout = timeout;
+    }
+
+    static ActiveEffectInfo[] readActiveEffects(JSONArray _array) throws JSONException {
+        if (_array != null){
+            ActiveEffectInfo[] effects = new ActiveEffectInfo[_array.length()];
+            for (int i = 0; i < effects.length; i++) {
+                effects[i] = (ActiveEffectInfo) EffectInfo.readEffect(_array.getJSONObject(i), true);
+            }
+            return effects;
+        }
+        return new ActiveEffectInfo[0];
     }
 
     public static String concatenatePrintableString(ActiveEffectInfo[] _effects) {

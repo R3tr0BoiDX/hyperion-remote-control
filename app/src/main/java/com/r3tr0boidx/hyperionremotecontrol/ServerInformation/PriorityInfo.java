@@ -3,6 +3,12 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 import android.graphics.Color;
 import android.util.Log;
 
+import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 //Someone could also names this "sources"
 public class PriorityInfo {
     private final Integer priority;         //The priority of this source, an integer between 0 and 255
@@ -31,6 +37,37 @@ public class PriorityInfo {
         this.active = active;
         this.visible = visible;
         this.value = value;
+    }
+
+    static PriorityInfo[] readPriorities(JSONArray _array) throws JSONException {
+        if (_array != null){
+            PriorityInfo[] priorities = new PriorityInfo[_array.length()];
+            for (int i = 0; i < priorities.length; i++) {
+                priorities[i] = readPriority(_array.getJSONObject(i));
+            }
+            return priorities;
+        }
+        return new PriorityInfo[0];
+    }
+
+    static PriorityInfo readPriority(JSONObject _object) {
+        //Get only RGB, since HSV is depending on RGB in Hyperion code - no need to get that as well
+        JSONObject values = JSONHelper.getObject(_object, "value");
+        JSONArray rgb = null;
+        if (values != null) {
+            rgb = JSONHelper.getArray(values, "RGB");
+        }
+
+        return new PriorityInfo(
+                JSONHelper.getInteger(_object, "priority"),
+                JSONHelper.getInteger(_object, "duration_ms"),
+                JSONHelper.getString(_object, "owner"),
+                JSONHelper.getString(_object, "componentId"),
+                JSONHelper.getString(_object, "origin"),
+                JSONHelper.getBoolean(_object, "active"),
+                JSONHelper.getBoolean(_object, "visible"),
+                JSONHelper.castArrayToColor(rgb)
+        );
     }
 
     public static String concatenatePrintableString(PriorityInfo[] _priorities) {
