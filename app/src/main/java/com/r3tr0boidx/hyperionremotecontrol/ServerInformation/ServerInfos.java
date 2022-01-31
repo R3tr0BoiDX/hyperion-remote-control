@@ -84,8 +84,8 @@ public class ServerInfos {
     public static String concatenatePrintableActiveColorString(Integer[] _colors) {
         StringBuilder sb = new StringBuilder();
         for (Integer i : _colors) {
-             sb.append("===ActiveLedColor===") .append(System.lineSeparator());
-             sb.append("activeColor: ").append(Color.valueOf(i)).append(System.lineSeparator());
+            sb.append("===ActiveLedColor===") .append(System.lineSeparator());
+            sb.append("activeColor: ").append(Color.valueOf(i)).append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -193,6 +193,10 @@ public class ServerInfos {
 
     public String[] getLedDevices() {
         return ledDevices;
+    }
+
+    public TransformInfo[] getTransforms() {
+        return transforms;
     }
 
     enum ImageToLedMappingTypes {

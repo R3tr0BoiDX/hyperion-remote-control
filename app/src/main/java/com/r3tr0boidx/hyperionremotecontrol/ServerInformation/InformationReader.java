@@ -41,26 +41,24 @@ public class InformationReader {
 
     static ServerInfos readInfos(JSONObject _object) {
         try {
-            //TODO: Should use JSONHelper.getArray as fell to be null-"safe"
-            // => requires, that read functions check, that give array is not null
-            ComponentInfos[] components = readComponents(_object.getJSONArray("components"));
-            AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
-            EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
-            PriorityInfo[] priorities = readPriorities(_object.getJSONArray("priorities"));
-            InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
-            LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
-            SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
-            ActiveEffectInfo[] activeEffects = readActiveEffects(_object.getJSONArray("activeEffects"));
-            GrabbersInfo grabbers = readGrabbers(_object.getJSONObject("grabbers"));
-            TransformInfo[] transforms = readTransfroms(_object.getJSONArray("transform"));
+            ComponentInfos[] components = readComponents(JSONHelper.getArray(_object,"components"));
+            AdjustmentsInfos[] adjusts = readAdjustments(JSONHelper.getArray(_object,"adjustment"));
+            EffectInfos[] effects = readEffects(JSONHelper.getArray(_object,"effects"));
+            PriorityInfo[] priorities = readPriorities(JSONHelper.getArray(_object,"priorities"));
+            InstanceInfos[] instances = readInstances(JSONHelper.getArray(_object,"instance"));
+            LEDInfo[] leds = readLEDs(JSONHelper.getArray(_object,"leds"));
+            SessionInfo[] sessions = readSessions(JSONHelper.getArray(_object,"sessions"));
+            ActiveEffectInfo[] activeEffects = readActiveEffects(JSONHelper.getArray(_object,"activeEffects"));
+            GrabbersInfo grabbers = readGrabbers(JSONHelper.getObject(_object,"grabbers"));
+            TransformInfo[] transforms = readTransfroms(JSONHelper.getArray(_object,"transform"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
             String hostname = readHostname(_object);
             Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
             Boolean cec = readCEC(JSONHelper.getObject(_object, "cec"));
-            Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
-            String[] ledDevices = readLEDDevices(_object.getJSONObject("ledDevices"));
+            Integer[] activeColors = readActiveColors(JSONHelper.getArray(_object, "activeLedColor"));
+            String[] ledDevices = readLEDDevices(JSONHelper.getObject(_object, "ledDevices"));
 
             return new ServerInfos(
                     components,
@@ -87,12 +85,17 @@ public class InformationReader {
         return null;
     }
     //endregion
+
+    //region Transform
     static TransformInfo[] readTransfroms(JSONArray _array) throws JSONException {
-        TransformInfo[] transform = new TransformInfo[_array.length()];
-        for (int i = 0; i < transform.length; i++) {
-            transform[i] = readTransfrom(_array.getJSONObject(i));
+        if (_array != null){
+            TransformInfo[] transform = new TransformInfo[_array.length()];
+            for (int i = 0; i < transform.length; i++) {
+                transform[i] = readTransfrom(_array.getJSONObject(i));
+            }
+            return transform;
         }
-        return transform;
+        return new TransformInfo[0];
     }
 
     private static TransformInfo readTransfrom(JSONObject _object) {
@@ -107,7 +110,7 @@ public class InformationReader {
                 readDoubleArray(JSONHelper.getArray(_object, "whitelevel")),
                 readDoubleArray(JSONHelper.getArray(_object, "gamma")),
                 readDoubleArray(JSONHelper.getArray(_object, "threshold"))
-                );
+        );
     }
 
     private static Double[] readDoubleArray(JSONArray _array){
@@ -118,59 +121,50 @@ public class InformationReader {
                     result[i] = _array.getDouble(i);
                 }
             } catch (JSONException e) {
-                Log.w("readDoubleArray", "Can't read " + _array.toString());
+                Log.w("readDoubleArray", "Can't read " + _array);
                 //e.printStackTrace();
             }
             return result;
         }
         return new Double[0];
     }
-    //region Transform
-
     //endregion
 
     //region Grabbers
     static GrabbersInfo readGrabbers(JSONObject _object){
-        //Read "active" part
-        String[] activeGrabbers = new String[0]; //declaring outside, so, we can pass it on, even when it's empty
-        try {
-            JSONArray active = _object.getJSONArray("active");
-            activeGrabbers = new String[active.length()];
-            for (int i = 0; i < activeGrabbers.length; i++) {
-                activeGrabbers[i] = active.getString(i);
-            }
-        } catch (JSONException e) {
-            Log.w("readGrabbers", "Can't read available grabbers");
-            //e.printStackTrace();
-        }
-
-        //Read "available" part
-        String[] availableGrabbers = new String[0];
-        try {
-            JSONArray available = _object.getJSONArray("available");
-            availableGrabbers = new String[available.length()];
-            for (int i = 0; i < availableGrabbers.length; i++) {
-                availableGrabbers[i] = available.getString(i);
-            }
-        } catch (JSONException e) {
-            Log.w("readGrabbers", "Can't read available grabbers");
-            //e.printStackTrace();
-        }
-
         return new GrabbersInfo(
-                activeGrabbers,
-                availableGrabbers
+                readStringArray(_object, "active"),
+                readStringArray(_object, "available")
         );
+    }
+
+    static String[] readStringArray(JSONObject _object, String _name){
+        String[] result = new String[0];
+
+        try {
+            JSONArray array = _object.getJSONArray(_name);
+            result = new String[array.length()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = array.getString(i);
+            }
+        } catch (Exception e) {
+            Log.w("readStringArray", "Can't read " + _object.toString());
+            //e.printStackTrace();
+        }
+        return result;
     }
     //endregion
 
     //region Active
     static Integer[] readActiveColors(JSONArray _array) throws JSONException {
-        Integer[] activeColors = new Integer[_array.length()];
-        for (int i = 0; i < activeColors.length; i++) {
-            activeColors[i] = readActiveColor(_array.getJSONObject(i));
+        if (_array != null){
+            Integer[] activeColors = new Integer[_array.length()];
+            for (int i = 0; i < activeColors.length; i++) {
+                activeColors[i] = readActiveColor(_array.getJSONObject(i));
+            }
+            return activeColors;
         }
-        return activeColors;
+        return new Integer[0];
     }
 
     static Integer readActiveColor(JSONObject _object) {
@@ -184,21 +178,27 @@ public class InformationReader {
     }
 
     static ActiveEffectInfo[] readActiveEffects(JSONArray _array) throws JSONException {
-        ActiveEffectInfo[] effects = new ActiveEffectInfo[_array.length()];
-        for (int i = 0; i < effects.length; i++) {
-            effects[i] = (ActiveEffectInfo) readEffect(_array.getJSONObject(i), true);
+        if (_array != null){
+            ActiveEffectInfo[] effects = new ActiveEffectInfo[_array.length()];
+            for (int i = 0; i < effects.length; i++) {
+                effects[i] = (ActiveEffectInfo) readEffect(_array.getJSONObject(i), true);
+            }
+            return effects;
         }
-        return effects;
+        return new ActiveEffectInfo[0];
     }
     //endregion
 
     //region Sessions
     static SessionInfo[] readSessions(JSONArray _array) throws JSONException {
-        SessionInfo[] sessions = new SessionInfo[_array.length()];
-        for (int i = 0; i < sessions.length; i++) {
-            sessions[i] = readSession(_array.getJSONObject(i));
+        if (_array != null){
+            SessionInfo[] sessions = new SessionInfo[_array.length()];
+            for (int i = 0; i < sessions.length; i++) {
+                sessions[i] = readSession(_array.getJSONObject(i));
+            }
+            return sessions;
         }
-        return sessions;
+        return new SessionInfo[0];
     }
 
     private static SessionInfo readSession(JSONObject _object) {
@@ -228,11 +228,14 @@ public class InformationReader {
 
     //region LEDs
     static LEDInfo[] readLEDs(JSONArray _array) throws JSONException {
-        LEDInfo[] leds = new LEDInfo[_array.length()];
-        for (int i = 0; i < leds.length; i++) {
-            leds[i] = readLED(_array.getJSONObject(i));
+        if (_array != null){
+            LEDInfo[] leds = new LEDInfo[_array.length()];
+            for (int i = 0; i < leds.length; i++) {
+                leds[i] = readLED(_array.getJSONObject(i));
+            }
+            return leds;
         }
-        return leds;
+        return new LEDInfo[0];
     }
 
     private static LEDInfo readLED(JSONObject _object) {
@@ -247,11 +250,14 @@ public class InformationReader {
 
     //region Instances
     static InstanceInfos[] readInstances(JSONArray _array) throws JSONException {
-        InstanceInfos[] instances = new InstanceInfos[_array.length()];
-        for (int i = 0; i < instances.length; i++) {
-            instances[i] = readInstance(_array.getJSONObject(i));
+        if (_array != null){
+            InstanceInfos[] instances = new InstanceInfos[_array.length()];
+            for (int i = 0; i < instances.length; i++) {
+                instances[i] = readInstance(_array.getJSONObject(i));
+            }
+            return instances;
         }
-        return instances;
+        return new InstanceInfos[0];
     }
 
     private static InstanceInfos readInstance(JSONObject _object) {
@@ -265,11 +271,14 @@ public class InformationReader {
 
     //region Priorities
     static PriorityInfo[] readPriorities(JSONArray _array) throws JSONException {
-        PriorityInfo[] priorities = new PriorityInfo[_array.length()];
-        for (int i = 0; i < priorities.length; i++) {
-            priorities[i] = readPriority(_array.getJSONObject(i));
+        if (_array != null){
+            PriorityInfo[] priorities = new PriorityInfo[_array.length()];
+            for (int i = 0; i < priorities.length; i++) {
+                priorities[i] = readPriority(_array.getJSONObject(i));
+            }
+            return priorities;
         }
-        return priorities;
+        return new PriorityInfo[0];
     }
 
     static PriorityInfo readPriority(JSONObject _object) {
@@ -295,11 +304,14 @@ public class InformationReader {
 
     //region Effects
     static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
-        EffectInfos[] effects = new EffectInfos[_array.length()];
-        for (int i = 0; i < effects.length; i++) {
-            effects[i] = readEffect(_array.getJSONObject(i), false);
+        if (_array != null){
+            EffectInfos[] effects = new EffectInfos[_array.length()];
+            for (int i = 0; i < effects.length; i++) {
+                effects[i] = readEffect(_array.getJSONObject(i), false);
+            }
+            return effects;
         }
-        return effects;
+        return new EffectInfos[0];
     }
 
     static EffectInfos readEffect(JSONObject _object, boolean _active) {
@@ -324,11 +336,14 @@ public class InformationReader {
 
     //region Adjustments
     static AdjustmentsInfos[] readAdjustments(JSONArray _array) throws JSONException {
-        AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
-        for (int i = 0; i < adjustments.length; i++) {
-            adjustments[i] = readAdjustment(_array.getJSONObject(i));
+        if (_array != null){
+            AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
+            for (int i = 0; i < adjustments.length; i++) {
+                adjustments[i] = readAdjustment(_array.getJSONObject(i));
+            }
+            return adjustments;
         }
-        return adjustments;
+        return new AdjustmentsInfos[0];
     }
 
     static AdjustmentsInfos readAdjustment(JSONObject _object) {
@@ -358,11 +373,14 @@ public class InformationReader {
 
     //region Components
     static ComponentInfos[] readComponents(JSONArray _array) throws JSONException {
-        ComponentInfos[] component = new ComponentInfos[_array.length()];
-        for (int i = 0; i < component.length; i++) {
-            component[i] = readComponent(_array.getJSONObject(i));
+        if (_array != null){
+            ComponentInfos[] component = new ComponentInfos[_array.length()];
+            for (int i = 0; i < component.length; i++) {
+                component[i] = readComponent(_array.getJSONObject(i));
+            }
+            return component;
         }
-        return component;
+        return new ComponentInfos[0];
     }
 
     static ComponentInfos readComponent(JSONObject _object) {
@@ -412,22 +430,28 @@ public class InformationReader {
     }
 
     static Boolean readCEC(JSONObject _object) {
-        return JSONHelper.getBoolean(_object, "enabled");
+        if (_object != null){
+            return JSONHelper.getBoolean(_object, "enabled");
+        }
+        return null;
     }
 
     static String[] readLEDDevices(JSONObject _object){
-        String[] ledDevices = new String[0];
-        try {
-            JSONArray available = _object.getJSONArray("available");
-            ledDevices = new String[available.length()];
-            for (int i = 0; i < ledDevices.length; i++) {
-                ledDevices[i] = available.getString(i);
+        if (_object != null){
+            String[] ledDevices = new String[0];
+            try {
+                JSONArray available = _object.getJSONArray("available");
+                ledDevices = new String[available.length()];
+                for (int i = 0; i < ledDevices.length; i++) {
+                    ledDevices[i] = available.getString(i);
+                }
+            } catch (JSONException e) {
+                Log.w("readLEDDevices", "Can't read available LED devices");
+                //e.printStackTrace();
             }
-        } catch (JSONException e) {
-            Log.w("readLEDDevices", "Can't read available LED devices");
-            //e.printStackTrace();
+            return ledDevices;
         }
-        return ledDevices;
+        return new String[0];
     }
     //endregion
 }
