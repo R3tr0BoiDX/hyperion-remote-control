@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="background_primary">#212121</color>
+    <color name="background_secondary">#333333</color>
+    <color name="foreground">#DDDDDD</color>
 
+    <color name="button_primary_hover">#337ab7</color>
+    <color name="button_primary">#155fa0</color>
 
-    <color name="body_background">#212121</color>
-    <color name="wrapper_background">#333333</color>
-    <color name="navbar_background">#212121</color>
+    <color name="button_warning_hover">#ec971f</color>
+    <color name="button_warning">#bc7410</color>
 
-    <color name="body_foreground">#DDDDDD</color>
-    <color name="navbar_foreground">#212121</color>
+    <color name="button_danger_hover">#b4102d</color>
+    <color name="button_danger">#861c30</color>
 
-    <color name="button_hover">#337ab7</color>
-    <color name="button_focus">#337ab7</color>
-    <color name="button_default">#155fa0</color>
-    <color name="button_disabled">#337ab7</color>
+    <color name="button_success_hover">#008000</color>
+    <color name="button_success">#006400</color>
 
-    <color name="button_danger_hover">#337ab7</color>
-    <color name="button_danger_focus">#337ab7</color>
-    <color name="button_danger_default">#155fa0</color>
-    <color name="button_danger_disabled">#337ab7</color>
+    <color name="button_wizard_hover">#993399</color>
+    <color name="wizard">#602060</color>
+
+    <color name="tables">#2e6da4</color>
 
 </resources>
