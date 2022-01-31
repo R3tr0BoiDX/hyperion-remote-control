@@ -4,11 +4,16 @@ package com.r3tr0boidx.hyperionremotecontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Control.EffectCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
 import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformation;
 import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformationReader;
@@ -30,9 +35,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView text = findViewById(R.id.textView);
+        text.setMovementMethod(new ScrollingMovementMethod());
+
+        try {
+            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
+            NetworkManager.getInstance().establishConnection(ip, true);
+
+            EffectCommand command = new EffectCommand(1, "Warm mood blobs");
+            command.setDuration(1000);
+            command.setOrigin("MY new app");
+
+            Helper.Log(command.buildCommand().toString());
+            //command.execute();
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    //Somehow network, somehow JSON and somehow helper. Don't know where to put this
+    //Somehow network, somehow JSON and somehow helper. Don't know where to put this => to extra class
     static Response getServerInfo() throws JSONException, InterruptedException {
         JSONObject json = new JSONObject();
         json.put("command", "serverinfo");

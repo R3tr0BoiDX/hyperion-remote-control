@@ -1,4 +1,4 @@
-package com.r3tr0boidx.hyperionremotecontrol;
+package com.r3tr0boidx.hyperionremotecontrol.Networking;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Response {
+    //TODO: remove "response" from name
     private final int responseCode;
     private final String responseMessage;
     private final JSONObject responseBody;

@@ -93,4 +93,17 @@ public class JSONHelper {
         }
         return null;
     }
+
+    public static JSONArray castColorToArray(int _color) throws JSONException {
+        int red = Color.red(_color);
+        int green = Color.green(_color);
+        int blue = Color.blue(_color);
+
+        JSONArray rgb = new JSONArray();
+        rgb.put(0, red);
+        rgb.put(1, green);
+        rgb.put(2, blue);
+
+        return rgb;
+    }
 }

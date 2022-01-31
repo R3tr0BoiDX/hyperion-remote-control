@@ -1,4 +1,4 @@
-package com.r3tr0boidx.hyperionremotecontrol;
+package com.r3tr0boidx.hyperionremotecontrol.Networking;
 
 import android.util.Log;
 
@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 

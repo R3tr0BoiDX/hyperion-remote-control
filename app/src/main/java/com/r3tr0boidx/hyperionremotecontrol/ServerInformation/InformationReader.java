@@ -5,6 +5,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 import android.util.Log;
 
 import com.r3tr0boidx.hyperionremotecontrol.*;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;

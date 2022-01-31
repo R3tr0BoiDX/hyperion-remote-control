@@ -3,7 +3,7 @@ package com.r3tr0boidx.hyperionremotecontrol.SystemInformation;
 import android.util.Log;
 
 import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
-import com.r3tr0boidx.hyperionremotecontrol.Response;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;

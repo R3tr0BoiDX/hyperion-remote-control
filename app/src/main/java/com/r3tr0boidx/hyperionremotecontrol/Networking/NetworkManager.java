@@ -1,14 +1,11 @@
-package com.r3tr0boidx.hyperionremotecontrol;
+package com.r3tr0boidx.hyperionremotecontrol.Networking;
 
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class NetworkManager {
     public static final int HTTP_PORT = 8090;

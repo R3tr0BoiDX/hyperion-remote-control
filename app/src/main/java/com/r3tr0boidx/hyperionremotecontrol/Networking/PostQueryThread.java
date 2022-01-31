@@ -1,4 +1,4 @@
-package com.r3tr0boidx.hyperionremotecontrol;
+package com.r3tr0boidx.hyperionremotecontrol.Networking;
 
 import android.util.Log;
 
