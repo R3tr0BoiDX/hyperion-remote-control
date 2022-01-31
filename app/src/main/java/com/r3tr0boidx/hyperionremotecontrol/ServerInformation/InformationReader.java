@@ -12,8 +12,6 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.UnknownHostException;
 
 //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
@@ -42,7 +40,6 @@ public class InformationReader {
     }
 
     /* TODO: Things left
-     * activeEffects
      * cec
      * grabbers
      * ledDevices
@@ -80,7 +77,7 @@ public class InformationReader {
                     instances,
                     leds,
                     sessions,
-                    activeColors);
+                    activeColors, activeEffects);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();

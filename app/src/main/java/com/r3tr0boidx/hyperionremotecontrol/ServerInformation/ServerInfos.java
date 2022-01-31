@@ -16,6 +16,7 @@ public class ServerInfos {
     private final LEDInfo[] leds;
     private final SessionInfo[] sessions;
     private final Integer[] activeColors;
+    private final ActiveEffectInfo[] activeEffects;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -30,7 +31,8 @@ public class ServerInfos {
             InstanceInfos[] instances,
             LEDInfo[] leds,
             SessionInfo[] sessions,
-            Integer[] activeColors) {
+            Integer[] activeColors,
+            ActiveEffectInfo[] activeEffects) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -43,6 +45,7 @@ public class ServerInfos {
         this.leds = leds;
         this.sessions = sessions;
         this.activeColors = activeColors;
+        this.activeEffects = activeEffects;
     }
 
     //TODO: Refactor to toString() method
@@ -55,7 +58,6 @@ public class ServerInfos {
         Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
         Log.d("LEDInfo", LEDInfo.concatenatePrintableString(leds));
         Log.d("ActiveLedColor", concatenatePrintableActiveColorString(activeColors));
-
 
         Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
         Log.d("ServerInfos", "videoMode: " + videoMode.toString());
@@ -144,6 +146,14 @@ public class ServerInfos {
 
     public SessionInfo[] getSessions() {
         return sessions;
+    }
+
+    public Integer[] getActiveColors() {
+        return activeColors;
+    }
+
+    public ActiveEffectInfo[] getActiveEffects() {
+        return activeEffects;
     }
 
     enum ImageToLedMappingTypes {
