@@ -1,9 +1,8 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
-import android.util.Log;
 
-public class AdjustmentsInfos {
+public class AdjustmentsInfo {
 
     //TODO: Check if colors arent null
 
@@ -27,7 +26,7 @@ public class AdjustmentsInfos {
     private final Integer brightness;               //minimum: 0 maximum 100 step of 1
     private final Integer brightnessCompensation;   //minimum: 0 maximum 100 step of 1, optional
 
-    public AdjustmentsInfos(
+    public AdjustmentsInfo(
             String id,
             Integer red,
             Integer green,
@@ -60,16 +59,16 @@ public class AdjustmentsInfos {
         this.brightnessCompensation = brightnessCompensation;
     }
 
-    public static String concatenatePrintableString(AdjustmentsInfos[] _adjustments) {
+    public static String concatenatePrintableString(AdjustmentsInfo[] _adjustments) {
         StringBuilder sb = new StringBuilder();
-        for (AdjustmentsInfos in : _adjustments) {
+        for (AdjustmentsInfo in : _adjustments) {
             sb.append(in.printableString()).append(System.lineSeparator());
         }
         return sb.toString();
     }
 
     String printableString() {
-        return "===AdjustmentsInfos===" + System.lineSeparator() +
+        return "===AdjustmentsInfo===" + System.lineSeparator() +
                 "id: " + id + System.lineSeparator() +
 
                 "red: " + Color.valueOf(red) + System.lineSeparator() +

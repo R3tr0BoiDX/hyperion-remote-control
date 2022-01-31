@@ -2,7 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import org.json.JSONObject;
 
-public class EffectInfos {
+public class EffectInfo {
 
     protected final JSONObject args;  //Arguments for effects
     protected final String file;      //Where the JSON file of the effect is saved
@@ -14,7 +14,7 @@ public class EffectInfos {
      */
     protected final Boolean systemEffect;
 
-    public EffectInfos(JSONObject args, String file, String name, String script) {
+    public EffectInfo(JSONObject args, String file, String name, String script) {
         this.args = args;
         this.file = file;
         this.name = name;
@@ -27,9 +27,9 @@ public class EffectInfos {
         }
     }
 
-    public static String concatenatePrintableString(EffectInfos[] _effects) {
+    public static String concatenatePrintableString(EffectInfo[] _effects) {
         StringBuilder sb = new StringBuilder();
-        for (EffectInfos ef : _effects) {
+        for (EffectInfo ef : _effects) {
             sb.append(ef.printableString(false)).append(System.lineSeparator());
         }
         return sb.toString();
@@ -41,7 +41,7 @@ public class EffectInfos {
         if (_active) {
             printable = "===ActiveEffectInfo===" + System.lineSeparator();
         } else {
-            printable = "===EffectInfos===" + System.lineSeparator();
+            printable = "===EffectInfo===" + System.lineSeparator();
         }
 
         printable += "args: " + args.toString() + System.lineSeparator() +

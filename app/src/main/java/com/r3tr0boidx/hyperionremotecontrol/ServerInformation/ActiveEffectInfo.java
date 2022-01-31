@@ -2,7 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import org.json.JSONObject;
 
-public class ActiveEffectInfo extends EffectInfos {
+public class ActiveEffectInfo extends EffectInfo {
 
     private final Integer priority;
     private final Integer timeout;

@@ -8,7 +8,7 @@ public class PriorityInfo {
     private final Integer priority;         //The priority of this source, an integer between 0 and 255
     private final Integer duration_ms;      //Actual duration in ms until this priority is automatically deleted. This is shown if source is color or effect AND a specific duration higher than 0 is set (0 means indefinite).
     private final String owner;             //Contains additional information related to the componentId
-    private final String componentId;       //A key belonging to a specific component that indicates the kind of input. Correlates to the ComponentInfos
+    private final String componentId;       //A key belonging to a specific component that indicates the kind of input. Correlates to the ComponentInfo
     private final String origin;            //A named external setter of this source for reference purposes. "System" is default
     private final Boolean active;           //If "true" it is selectable for manual source selection
     private final Boolean visible;          //If "true" this source is displayed and pushed to the led device

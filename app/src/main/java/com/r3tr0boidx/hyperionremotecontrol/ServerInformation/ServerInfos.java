@@ -3,69 +3,67 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 import android.graphics.Color;
 
 public class ServerInfos {
-    //TODO: Should represent order of JSON response
-    private final ComponentInfos[] components;
-    private final AdjustmentsInfos[] adjustments;
-    private final EffectInfos[] effects;
-    private final ImageToLedMappingTypes ledMappingType;
-    private final VideoModes videoMode;
+    private final ActiveEffectInfo[] activeEffects;
+    private final Integer[] activeColors;
+    private final AdjustmentsInfo[] adjustments;
+    private final Boolean cec;
+    private final ComponentInfo[] components;
+    private final EffectInfo[] effects;
+    private final GrabbersInfo grabbers;
     private final String hostname;
+    private final ImageToLedMappingTypes ledMappingType;
+    private final InstanceInfo[] instances;
+    private final String[] ledDevices;
+    private final LEDInfo[] leds;
     private final PriorityInfo[] priorities;
     private final Boolean prioritiesAutoSelect;
-    private final InstanceInfos[] instances;
-    private final LEDInfo[] leds;
     private final SessionInfo[] sessions;
-    private final Integer[] activeColors;
-    private final ActiveEffectInfo[] activeEffects;
-    private final Boolean cec;
-    private final GrabbersInfo grabbers;
-    private final String[] ledDevices;
     private final TransformInfo[] transforms;
+    private final VideoModes videoMode;
 
-    //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
-            ComponentInfos[] components,
-            AdjustmentsInfos[] adjustments,
-            EffectInfos[] effects,
-            ImageToLedMappingTypes ledMappingType,
-            VideoModes videoMode,
+            ActiveEffectInfo[] activeEffects,
+            Integer[] activeColors,
+            AdjustmentsInfo[] adjustments,
+            Boolean cec,
+            ComponentInfo[] components,
+            EffectInfo[] effects,
+            GrabbersInfo grabbers,
             String hostname,
+            ImageToLedMappingTypes ledMappingType,
+            InstanceInfo[] instances,
+            String[] ledDevices,
+            LEDInfo[] leds,
             PriorityInfo[] priorities,
             Boolean prioritiesAutoSelect,
-            InstanceInfos[] instances,
-            LEDInfo[] leds,
             SessionInfo[] sessions,
-            Integer[] activeColors,
-            ActiveEffectInfo[] activeEffects,
-            Boolean cec,
-            GrabbersInfo grabbers,
-            String[] ledDevices,
-            TransformInfo[] transforms) {
-        this.components = components;
+            TransformInfo[] transforms,
+            VideoModes videoMode) {
+        this.activeEffects = activeEffects;
+        this.activeColors = activeColors;
         this.adjustments = adjustments;
+        this.cec = cec;
+        this.components = components;
         this.effects = effects;
-        this.ledMappingType = ledMappingType;
-        this.videoMode = videoMode;
+        this.grabbers = grabbers;
         this.hostname = hostname;
+        this.ledMappingType = ledMappingType;
+        this.instances = instances;
+        this.ledDevices = ledDevices;
+        this.leds = leds;
         this.priorities = priorities;
         this.prioritiesAutoSelect = prioritiesAutoSelect;
-        this.instances = instances;
-        this.leds = leds;
         this.sessions = sessions;
-        this.activeColors = activeColors;
-        this.activeEffects = activeEffects;
-        this.cec = cec;
-        this.grabbers = grabbers;
-        this.ledDevices = ledDevices;
         this.transforms = transforms;
+        this.videoMode = videoMode;
     }
 
     public String concatenatePrintableString() {
-        return ComponentInfos.concatenatePrintableString(components) + System.lineSeparator() +
-                AdjustmentsInfos.concatenatePrintableString(adjustments) + System.lineSeparator() +
-                EffectInfos.concatenatePrintableString(effects) + System.lineSeparator() +
+        return ComponentInfo.concatenatePrintableString(components) + System.lineSeparator() +
+                AdjustmentsInfo.concatenatePrintableString(adjustments) + System.lineSeparator() +
+                EffectInfo.concatenatePrintableString(effects) + System.lineSeparator() +
                 PriorityInfo.concatenatePrintableString(priorities) + System.lineSeparator() +
-                InstanceInfos.concatenatePrintableString(instances) + System.lineSeparator() +
+                InstanceInfo.concatenatePrintableString(instances) + System.lineSeparator() +
                 LEDInfo.concatenatePrintableString(leds) + System.lineSeparator() +
 
                 concatenatePrintableActiveColorString(activeColors) + System.lineSeparator() +
@@ -131,28 +129,52 @@ public class ServerInfos {
         return null;
     }
 
-    public ComponentInfos[] getComponents() {
-        return components;
+    public ActiveEffectInfo[] getActiveEffects() {
+        return activeEffects;
     }
 
-    public AdjustmentsInfos[] getAdjustments() {
+    public Integer[] getActiveColors() {
+        return activeColors;
+    }
+
+    public AdjustmentsInfo[] getAdjustments() {
         return adjustments;
     }
 
-    public EffectInfos[] getEffects() {
+    public Boolean getCec() {
+        return cec;
+    }
+
+    public ComponentInfo[] getComponents() {
+        return components;
+    }
+
+    public EffectInfo[] getEffects() {
         return effects;
+    }
+
+    public GrabbersInfo getGrabbers() {
+        return grabbers;
+    }
+
+    public String getHostname() {
+        return hostname;
     }
 
     public ImageToLedMappingTypes getLedMappingType() {
         return ledMappingType;
     }
 
-    public VideoModes getVideoMode() {
-        return videoMode;
+    public InstanceInfo[] getInstances() {
+        return instances;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String[] getLedDevices() {
+        return ledDevices;
+    }
+
+    public LEDInfo[] getLeds() {
+        return leds;
     }
 
     public PriorityInfo[] getPriorities() {
@@ -163,40 +185,16 @@ public class ServerInfos {
         return prioritiesAutoSelect;
     }
 
-    public InstanceInfos[] getInstances() {
-        return instances;
-    }
-
-    public LEDInfo[] getLeds() {
-        return leds;
-    }
-
     public SessionInfo[] getSessions() {
         return sessions;
     }
 
-    public Integer[] getActiveColors() {
-        return activeColors;
-    }
-
-    public ActiveEffectInfo[] getActiveEffects() {
-        return activeEffects;
-    }
-
-    public Boolean getCec() {
-        return cec;
-    }
-
-    public GrabbersInfo getGrabbers() {
-        return grabbers;
-    }
-
-    public String[] getLedDevices() {
-        return ledDevices;
-    }
-
     public TransformInfo[] getTransforms() {
         return transforms;
+    }
+
+    public VideoModes getVideoMode() {
+        return videoMode;
     }
 
     enum ImageToLedMappingTypes {

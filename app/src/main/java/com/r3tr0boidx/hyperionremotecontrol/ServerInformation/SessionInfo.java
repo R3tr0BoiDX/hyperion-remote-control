@@ -38,7 +38,7 @@ public class SessionInfo {
     }
 
     String printableString() {
-        return "===InstanceInfos===" + System.lineSeparator() +
+        return "===InstanceInfo===" + System.lineSeparator() +
                 "address: " + address + System.lineSeparator() +
                 "domain: " + domain + System.lineSeparator() +
                 "host: " + host + System.lineSeparator() +

@@ -41,11 +41,11 @@ public class InformationReader {
 
     static ServerInfos readInfos(JSONObject _object) {
         try {
-            ComponentInfos[] components = readComponents(JSONHelper.getArray(_object,"components"));
-            AdjustmentsInfos[] adjusts = readAdjustments(JSONHelper.getArray(_object,"adjustment"));
-            EffectInfos[] effects = readEffects(JSONHelper.getArray(_object,"effects"));
+            ComponentInfo[] components = readComponents(JSONHelper.getArray(_object,"components"));
+            AdjustmentsInfo[] adjustments = readAdjustments(JSONHelper.getArray(_object,"adjustment"));
+            EffectInfo[] effects = readEffects(JSONHelper.getArray(_object,"effects"));
             PriorityInfo[] priorities = readPriorities(JSONHelper.getArray(_object,"priorities"));
-            InstanceInfos[] instances = readInstances(JSONHelper.getArray(_object,"instance"));
+            InstanceInfo[] instances = readInstances(JSONHelper.getArray(_object,"instance"));
             LEDInfo[] leds = readLEDs(JSONHelper.getArray(_object,"leds"));
             SessionInfo[] sessions = readSessions(JSONHelper.getArray(_object,"sessions"));
             ActiveEffectInfo[] activeEffects = readActiveEffects(JSONHelper.getArray(_object,"activeEffects"));
@@ -61,23 +61,23 @@ public class InformationReader {
             String[] ledDevices = readLEDDevices(JSONHelper.getObject(_object, "ledDevices"));
 
             return new ServerInfos(
+                    activeEffects,
+                    activeColors,
+                    adjustments,
+                    cec,
                     components,
-                    adjusts,
                     effects,
-                    ledMappingType,
-                    videoMode,
+                    grabbers,
                     hostname,
+                    ledMappingType,
+                    instances,
+                    ledDevices,
+                    leds,
                     priorities,
                     prioritiesAutoSelect,
-                    instances,
-                    leds,
                     sessions,
-                    activeColors,
-                    activeEffects,
-                    cec,
-                    grabbers,
-                    ledDevices,
-                    transforms);
+                    transforms,
+                    videoMode);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -249,19 +249,19 @@ public class InformationReader {
     //endregion
 
     //region Instances
-    static InstanceInfos[] readInstances(JSONArray _array) throws JSONException {
+    static InstanceInfo[] readInstances(JSONArray _array) throws JSONException {
         if (_array != null){
-            InstanceInfos[] instances = new InstanceInfos[_array.length()];
+            InstanceInfo[] instances = new InstanceInfo[_array.length()];
             for (int i = 0; i < instances.length; i++) {
                 instances[i] = readInstance(_array.getJSONObject(i));
             }
             return instances;
         }
-        return new InstanceInfos[0];
+        return new InstanceInfo[0];
     }
 
-    private static InstanceInfos readInstance(JSONObject _object) {
-        return new InstanceInfos(
+    private static InstanceInfo readInstance(JSONObject _object) {
+        return new InstanceInfo(
                 JSONHelper.getString(_object, "friendly_name"),
                 JSONHelper.getInteger(_object, "instance"),
                 JSONHelper.getBoolean(_object, "running")
@@ -303,18 +303,18 @@ public class InformationReader {
     //endregion
 
     //region Effects
-    static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
+    static EffectInfo[] readEffects(JSONArray _array) throws JSONException {
         if (_array != null){
-            EffectInfos[] effects = new EffectInfos[_array.length()];
+            EffectInfo[] effects = new EffectInfo[_array.length()];
             for (int i = 0; i < effects.length; i++) {
                 effects[i] = readEffect(_array.getJSONObject(i), false);
             }
             return effects;
         }
-        return new EffectInfos[0];
+        return new EffectInfo[0];
     }
 
-    static EffectInfos readEffect(JSONObject _object, boolean _active) {
+    static EffectInfo readEffect(JSONObject _object, boolean _active) {
         if (_active){
             return new ActiveEffectInfo(
                     JSONHelper.getObject(_object, "args"),
@@ -324,7 +324,7 @@ public class InformationReader {
                     JSONHelper.getInteger(_object, "timeout")
             );
         } else {
-            return new EffectInfos(
+            return new EffectInfo(
                     JSONHelper.getObject(_object, "args"),
                     JSONHelper.getString(_object, "file"),
                     JSONHelper.getString(_object, "name"),
@@ -335,19 +335,19 @@ public class InformationReader {
     //endregion
 
     //region Adjustments
-    static AdjustmentsInfos[] readAdjustments(JSONArray _array) throws JSONException {
+    static AdjustmentsInfo[] readAdjustments(JSONArray _array) throws JSONException {
         if (_array != null){
-            AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
+            AdjustmentsInfo[] adjustments = new AdjustmentsInfo[_array.length()];
             for (int i = 0; i < adjustments.length; i++) {
                 adjustments[i] = readAdjustment(_array.getJSONObject(i));
             }
             return adjustments;
         }
-        return new AdjustmentsInfos[0];
+        return new AdjustmentsInfo[0];
     }
 
-    static AdjustmentsInfos readAdjustment(JSONObject _object) {
-        return new AdjustmentsInfos(
+    static AdjustmentsInfo readAdjustment(JSONObject _object) {
+        return new AdjustmentsInfo(
                 JSONHelper.getString(_object, "id"),
 
                 JSONHelper.castArrayToColor(JSONHelper.getArray(_object, "red")),
@@ -372,23 +372,23 @@ public class InformationReader {
     //endregion
 
     //region Components
-    static ComponentInfos[] readComponents(JSONArray _array) throws JSONException {
+    static ComponentInfo[] readComponents(JSONArray _array) throws JSONException {
         if (_array != null){
-            ComponentInfos[] component = new ComponentInfos[_array.length()];
+            ComponentInfo[] component = new ComponentInfo[_array.length()];
             for (int i = 0; i < component.length; i++) {
                 component[i] = readComponent(_array.getJSONObject(i));
             }
             return component;
         }
-        return new ComponentInfos[0];
+        return new ComponentInfo[0];
     }
 
-    static ComponentInfos readComponent(JSONObject _object) {
+    static ComponentInfo readComponent(JSONObject _object) {
         String type = JSONHelper.getString(_object, "name");
         if (type != null) {
             if (componentNameExists(type)) {
-                return new ComponentInfos(
-                        ComponentInfos.Component.valueOf(type.toUpperCase()),
+                return new ComponentInfo(
+                        ComponentInfo.Component.valueOf(type.toUpperCase()),
                         JSONHelper.getBoolean(_object, "enabled")
                 );
             } else {
@@ -401,7 +401,7 @@ public class InformationReader {
     }
 
     public static boolean componentNameExists(String test) {
-        for (ComponentInfos.Component c : ComponentInfos.Component.values()) {
+        for (ComponentInfo.Component c : ComponentInfo.Component.values()) {
             if (c.name().equals(test)) {
                 return true;
             }

@@ -1,32 +1,27 @@
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
-import android.util.Log;
-
-//TODO: Rebuild in a way, that entries are a enum. Then adapt to data structure to other Info classes
-
-
-public class ComponentInfos {
+public class ComponentInfo {
 
     private final Component type;
     private final Boolean state;
 
-    public ComponentInfos(
+    public ComponentInfo(
             Component type,
             Boolean state) {
         this.type = type;
         this.state = state;
     }
 
-    public static String concatenatePrintableString(ComponentInfos[] _component) {
+    public static String concatenatePrintableString(ComponentInfo[] _component) {
         StringBuilder sb = new StringBuilder();
-        for (ComponentInfos in : _component) {
+        for (ComponentInfo in : _component) {
             sb.append(in.printableString()).append(System.lineSeparator());
         }
         return sb.toString();
     }
 
     String printableString() {
-        return "===ComponentInfos===" + System.lineSeparator() +
+        return "===ComponentInfo===" + System.lineSeparator() +
                 "type: " + type.toString() + System.lineSeparator() +
                 "state: " + state + System.lineSeparator();
     }
