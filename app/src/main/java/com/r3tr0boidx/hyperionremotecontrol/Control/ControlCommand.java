@@ -9,6 +9,8 @@ import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//TODO: Implement a valiidate method, to check if command was successfull
+
 public interface ControlCommand {
 
     /**

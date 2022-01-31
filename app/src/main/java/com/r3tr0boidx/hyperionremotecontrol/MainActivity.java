@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.EffectCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Control.ImageCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
@@ -43,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            EffectCommand command = new EffectCommand(1, "Warm mood blobs");
-            command.setDuration(1000);
+            ImageCommand command = new ImageCommand(2, "");
+            command.setDuration(5000);
             command.setOrigin("MY new app");
 
             Helper.Log(command.buildCommand().toString());
-            //command.execute();
+            command.execute();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

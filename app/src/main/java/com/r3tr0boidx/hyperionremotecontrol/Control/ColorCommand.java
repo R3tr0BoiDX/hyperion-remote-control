@@ -35,29 +35,7 @@ public class ColorCommand implements ControlCommand {
             this.priority = priority;
             this.color = color;
         } else {
-            throw new IllegalArgumentException("Priority was to high or low. Min. is 2, max. is 99");
-        }
-    }
-
-    /**
-     * Duration of color in ms. Indefinite by default
-     *
-     * @param duration The duration is ms
-     */
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    /**
-     * A short name of your application.
-     *
-     * @param origin Name of application, that send command. Max length is 20, min 4
-     */
-    public void setOrigin(String origin) {
-        if (origin.length() > 3 && origin.length() < 21) {
-            this.origin = origin;
-        } else {
-            throw new IllegalArgumentException("Name was either to short or to long. Min. 4, max. 20 characters");
+            throw new IllegalArgumentException("Priority was to high or low. Min. is 2, max. is 99. Given priority: " + priority);
         }
     }
 
@@ -88,5 +66,27 @@ public class ColorCommand implements ControlCommand {
             //e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Duration of color in ms. Indefinite by default
+     *
+     * @param duration The duration is ms
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * A short name of your application.
+     *
+     * @param origin Name of application, that send command. Max length is 20, min 4
+     */
+    public void setOrigin(String origin) {
+        if (origin.length() > 3 && origin.length() < 21) {
+            this.origin = origin;
+        } else {
+            throw new IllegalArgumentException("Name was either to short or to long. Min. 4, max. 20 characters. Given length: " + origin.length());
+        }
     }
 }
