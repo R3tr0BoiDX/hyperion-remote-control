@@ -40,8 +40,6 @@ public class InformationReader {
     }
 
     /* TODO: Things left
-     * grabbers
-     * ledDevices
      * transform
      */
 
@@ -56,7 +54,6 @@ public class InformationReader {
             InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
             LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
             SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
-            Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
             ActiveEffectInfo[] activeEffects = readActiveEffects(_object.getJSONArray("activeEffects"));
             GrabbersInfo grabbers = readGrabbers(_object.getJSONObject("grabbers"));
 
@@ -65,6 +62,8 @@ public class InformationReader {
             String hostname = readHostname(_object);
             Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
             Boolean cec = readCEC(JSONHelper.getObject(_object, "cec"));
+            Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
+            String[] ledDevices = readLEDDevices(_object.getJSONObject("ledDevices"));
 
             return new ServerInfos(
                     components,
@@ -80,7 +79,9 @@ public class InformationReader {
                     sessions,
                     activeColors,
                     activeEffects,
-                    cec, grabbers);
+                    cec,
+                    grabbers,
+                    ledDevices);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -90,10 +91,9 @@ public class InformationReader {
     //endregion
 
     //region Grabbers
-
     static GrabbersInfo readGrabbers(JSONObject _object){
         //Read "active" part
-        String[] activeGrabbers = new String[0];
+        String[] activeGrabbers = new String[0]; //declaring outside, so, we can pass it on, even when it's empty
         try {
             JSONArray active = _object.getJSONArray("active");
             activeGrabbers = new String[active.length()];
@@ -123,7 +123,6 @@ public class InformationReader {
                 availableGrabbers
         );
     }
-
     //endregion
 
     //region Active
@@ -375,6 +374,21 @@ public class InformationReader {
 
     static Boolean readCEC(JSONObject _object) {
         return JSONHelper.getBoolean(_object, "enabled");
+    }
+
+    static String[] readLEDDevices(JSONObject _object){
+        String[] ledDevices = new String[0];
+        try {
+            JSONArray available = _object.getJSONArray("available");
+            ledDevices = new String[available.length()];
+            for (int i = 0; i < ledDevices.length; i++) {
+                ledDevices[i] = available.getString(i);
+            }
+        } catch (JSONException e) {
+            Log.w("readLEDDevices", "Can't read available LED devices");
+            //e.printStackTrace();
+        }
+        return ledDevices;
     }
     //endregion
 }

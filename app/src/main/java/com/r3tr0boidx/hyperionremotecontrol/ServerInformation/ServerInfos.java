@@ -20,6 +20,7 @@ public class ServerInfos {
     private final ActiveEffectInfo[] activeEffects;
     private final Boolean cec;
     private final GrabbersInfo grabbers;
+    private final String[] ledDevices;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -37,7 +38,8 @@ public class ServerInfos {
             Integer[] activeColors,
             ActiveEffectInfo[] activeEffects,
             Boolean cec,
-            GrabbersInfo grabbers) {
+            GrabbersInfo grabbers,
+            String[] ledDevices) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -53,6 +55,7 @@ public class ServerInfos {
         this.activeEffects = activeEffects;
         this.cec = cec;
         this.grabbers = grabbers;
+        this.ledDevices = ledDevices;
     }
 
     //TODO: Refactor to toString() method
@@ -79,6 +82,17 @@ public class ServerInfos {
         for (Integer i : _colors) {
              sb.append("===ActiveLedColor===") .append(System.lineSeparator());
              sb.append("activeColor: ").append(Color.valueOf(i)).append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
+
+    public static String concatenatePrintableLEDDevicesString(String[] _ledDevices) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("===LedDevices===").append(System.lineSeparator());
+
+        //Append available grabbers
+        for (String s : _ledDevices) {
+            sb.append("available: ").append(s).append(System.lineSeparator());
         }
         return sb.toString();
     }
@@ -163,6 +177,18 @@ public class ServerInfos {
 
     public ActiveEffectInfo[] getActiveEffects() {
         return activeEffects;
+    }
+
+    public Boolean getCec() {
+        return cec;
+    }
+
+    public GrabbersInfo getGrabbers() {
+        return grabbers;
+    }
+
+    public String[] getLedDevices() {
+        return ledDevices;
     }
 
     enum ImageToLedMappingTypes {
