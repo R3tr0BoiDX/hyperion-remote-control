@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -122,36 +123,51 @@ public class EffectInfo {
         return systemEffect;
     }
 
-    //Works - do something with it
     /*
-    void readEffectArgs(JSONObject _args){
+    //Works - do something with it
+    List<EffectArg<?>> readEffectArgs(JSONObject _args){
         Iterator<String> keys = _args.keys();
+        List<EffectArg<?>> args = new ArrayList<>();
+
         try {
             while(keys.hasNext()) {
                 String key = keys.next();
                 Object item = _args.get(key);
 
                 if (item instanceof Boolean) {
+                    EffectArg<Boolean> effectArg = new EffectArg<>(key, (Boolean) item);
+                    args.add(effectArg);
                 }
 
                 if (item instanceof Integer) {
+                    EffectArg<Integer> effectArg = new EffectArg<>(key, (Integer) item);
+                    args.add(effectArg);
                 }
 
                 if (item instanceof Double) {
+                    EffectArg<Double> effectArg = new EffectArg<>(key, (Double) item);
+                    args.add(effectArg);
                 }
 
                 if (item instanceof String) {
+                    EffectArg<String> effectArg = new EffectArg<>(key, (String) item);
+                    args.add(effectArg);
                 }
 
                 if (item instanceof JSONArray) {
+                    EffectArg<JSONArray> effectArg = new EffectArg<>(key, (JSONArray) item);
+                    args.add(effectArg);
                 }
 
                 if (item instanceof JSONObject) {
+                    EffectArg<JSONObject> effectArg = new EffectArg<>(key, (JSONObject) item);
+                    args.add(effectArg);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return args;
     }
      */
 }
