@@ -30,7 +30,7 @@ public class AdjustmentsInfo {
     private final Integer brightness;               //minimum: 0 maximum 100 step of 1
     private final Integer brightnessCompensation;   //minimum: 0 maximum 100 step of 1, optional
 
-    public AdjustmentsInfo(
+    AdjustmentsInfo(
             String id,
             Integer red,
             Integer green,
@@ -74,7 +74,7 @@ public class AdjustmentsInfo {
         return new AdjustmentsInfo[0];
     }
 
-    static AdjustmentsInfo readAdjustment(JSONObject _object) {
+    private static AdjustmentsInfo readAdjustment(JSONObject _object) {
         return new AdjustmentsInfo(
                 JSONHelper.getString(_object, "id"),
 
@@ -106,7 +106,7 @@ public class AdjustmentsInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         return "===AdjustmentsInfo===" + System.lineSeparator() +
                 "id: " + id + System.lineSeparator() +
 

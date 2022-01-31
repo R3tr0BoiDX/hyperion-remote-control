@@ -20,7 +20,7 @@ public class PriorityInfo {
     private final Boolean visible;          //If "true" this source is displayed and pushed to the led device
     private final Integer value;            //If the source is a color AND color data is available, this will be the color in RGB (spares the HSV value from the API)
 
-    public PriorityInfo(
+    PriorityInfo(
             Integer priority,
             Integer duration_ms,
             String owner,
@@ -50,7 +50,7 @@ public class PriorityInfo {
         return new PriorityInfo[0];
     }
 
-    static PriorityInfo readPriority(JSONObject _object) {
+    private static PriorityInfo readPriority(JSONObject _object) {
         //Get only RGB, since HSV is depending on RGB in Hyperion code - no need to get that as well
         JSONObject values = JSONHelper.getObject(_object, "value");
         JSONArray rgb = null;
@@ -78,7 +78,7 @@ public class PriorityInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         String print = "===PriorityInfo===" + System.lineSeparator() +
                 "priority: " + priority + System.lineSeparator() +
                 "duration_ms: " + duration_ms + System.lineSeparator() +
@@ -90,7 +90,6 @@ public class PriorityInfo {
         if (value != null){
             print += "value: " + Color.valueOf(value) + System.lineSeparator();
         }
-
         return print;
     }
 

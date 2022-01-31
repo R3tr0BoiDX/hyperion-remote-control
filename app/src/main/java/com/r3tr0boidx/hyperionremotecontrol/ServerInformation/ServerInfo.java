@@ -2,7 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
 
-public class ServerInfos {
+public class ServerInfo {
     private final ActiveEffectInfo[] activeEffects;
     private final Integer[] activeColors;
     private final AdjustmentsInfo[] adjustments;
@@ -21,7 +21,7 @@ public class ServerInfos {
     private final TransformInfo[] transforms;
     private final VideoModes videoMode;
 
-    public ServerInfos(
+    public ServerInfo(
             ActiveEffectInfo[] activeEffects,
             Integer[] activeColors,
             AdjustmentsInfo[] adjustments,
@@ -69,20 +69,21 @@ public class ServerInfos {
                 concatenatePrintableActiveColorString(activeColors) + System.lineSeparator() +
                 ActiveEffectInfo.concatenatePrintableString(activeEffects) + System.lineSeparator() +
                 GrabbersInfo.concatenatePrintableString(grabbers) + System.lineSeparator() +
+                concatenatePrintableLEDDevicesString(ledDevices) + System.lineSeparator() +
                 TransformInfo.concatenatePrintableString(transforms) + System.lineSeparator() +
 
                 "===Misc===" + System.lineSeparator() +
                 "ledMappingType: " + ledMappingType.toString() + System.lineSeparator() +
-                "videoMode: " + videoMode.toString() +System.lineSeparator() +
-                "hostname: " + hostname +System.lineSeparator() +
-                "prioritiesAutoSelect: " + prioritiesAutoSelect +System.lineSeparator() +
+                "videoMode: " + videoMode.toString() + System.lineSeparator() +
+                "hostname: " + hostname + System.lineSeparator() +
+                "prioritiesAutoSelect: " + prioritiesAutoSelect + System.lineSeparator() +
                 "cec: " + cec;
     }
 
     public static String concatenatePrintableActiveColorString(Integer[] _colors) {
         StringBuilder sb = new StringBuilder();
         for (Integer i : _colors) {
-            sb.append("===ActiveLedColor===") .append(System.lineSeparator());
+            sb.append("===ActiveLedColor===").append(System.lineSeparator());
             sb.append("activeColor: ").append(Color.valueOf(i)).append(System.lineSeparator());
         }
         return sb.toString();

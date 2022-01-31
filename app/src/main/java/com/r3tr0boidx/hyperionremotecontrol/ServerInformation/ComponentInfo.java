@@ -13,7 +13,7 @@ public class ComponentInfo {
     private final Component type;
     private final Boolean state;
 
-    public ComponentInfo(
+    ComponentInfo(
             Component type,
             Boolean state) {
         this.type = type;
@@ -31,7 +31,7 @@ public class ComponentInfo {
         return new ComponentInfo[0];
     }
 
-    static ComponentInfo readComponent(JSONObject _object) {
+    private static ComponentInfo readComponent(JSONObject _object) {
         String type = JSONHelper.getString(_object, "name");
         if (type != null) {
             if (componentNameExists(type)) {
@@ -48,7 +48,7 @@ public class ComponentInfo {
         return null;
     }
 
-    public static boolean componentNameExists(String test) {
+    private static boolean componentNameExists(String test) {
         for (ComponentInfo.Component c : ComponentInfo.Component.values()) {
             if (c.name().equals(test)) {
                 return true;
@@ -65,7 +65,7 @@ public class ComponentInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         return "===ComponentInfo===" + System.lineSeparator() +
                 "type: " + type.toString() + System.lineSeparator() +
                 "state: " + state + System.lineSeparator();

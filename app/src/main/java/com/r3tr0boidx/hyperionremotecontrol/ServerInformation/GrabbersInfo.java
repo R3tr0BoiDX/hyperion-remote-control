@@ -39,7 +39,7 @@ public class GrabbersInfo {
         return result;
     }
 
-    static String concatenatePrintableString(GrabbersInfo _grabbers) {
+    public static String concatenatePrintableString(GrabbersInfo _grabbers) {
         StringBuilder sb = new StringBuilder();
         sb.append("===GrabbersInfo===").append(System.lineSeparator());
 

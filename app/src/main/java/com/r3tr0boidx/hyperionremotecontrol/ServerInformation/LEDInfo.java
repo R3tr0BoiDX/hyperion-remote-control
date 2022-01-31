@@ -12,7 +12,11 @@ public class LEDInfo {
     private final Double vmax;
     private final Double vmin;
 
-    public LEDInfo(Double hmax, Double hmin, Double vmax, Double vmin) {
+    LEDInfo(
+            Double hmax,
+            Double hmin,
+            Double vmax,
+            Double vmin) {
         this.hmax = hmax;
         this.hmin = hmin;
         this.vmax = vmax;
@@ -47,7 +51,7 @@ public class LEDInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         return "===LEDInfo===" + System.lineSeparator() +
                 "hmax: " + hmax + System.lineSeparator() +
                 "hmin: " + hmin + System.lineSeparator() +

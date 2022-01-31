@@ -39,7 +39,7 @@ public class ActiveEffectInfo extends EffectInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         String printable = super.printableString(true);
         printable += "===Active Attributes===" + System.lineSeparator() +
                 "priority: " + priority + System.lineSeparator() +
@@ -64,7 +64,7 @@ public class ActiveEffectInfo extends EffectInfo {
 
     //systemEffects bases on file
     @Override
-    protected Boolean isSystemEffect(String _file) {
+    public Boolean isSystemEffect(String _file) {
         return null;
     }
 }

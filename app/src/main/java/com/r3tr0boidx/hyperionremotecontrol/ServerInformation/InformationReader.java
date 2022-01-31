@@ -11,8 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
 
 //https://github.com/hyperion-project/hyperion.ng/tree/master/libsrc/api/JSONRPC_schema
 //https://github.com/hyperion-project/hyperion.ng/blob/master/libsrc/api/JsonAPI.cpp
@@ -20,7 +18,7 @@ import java.net.UnknownHostException;
 public class InformationReader {
 
     //region Basics
-    public static ServerInfos readResponse(Response serverResponse) {
+    public static ServerInfo readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
@@ -39,7 +37,7 @@ public class InformationReader {
         return null;
     }
 
-    static ServerInfos readInfos(JSONObject _object) {
+    static ServerInfo readInfos(JSONObject _object) {
         try {
             ComponentInfo[] components = ComponentInfo.readComponents(JSONHelper.getArray(_object,"components"));
             AdjustmentsInfo[] adjustments = AdjustmentsInfo.readAdjustments(JSONHelper.getArray(_object,"adjustment"));
@@ -52,15 +50,15 @@ public class InformationReader {
             GrabbersInfo grabbers = GrabbersInfo.readGrabbers(JSONHelper.getObject(_object,"grabbers"));
             TransformInfo[] transforms = TransformInfo.readTransfroms(JSONHelper.getArray(_object,"transform"));
 
-            ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
-            ServerInfos.VideoModes videoMode = readVideoMode(_object);
+            ServerInfo.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
+            ServerInfo.VideoModes videoMode = readVideoMode(_object);
             String hostname = readHostname(_object);
             Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
             Boolean cec = readCEC(JSONHelper.getObject(_object, "cec"));
             Integer[] activeColors = readActiveColors(JSONHelper.getArray(_object, "activeLedColor"));
             String[] ledDevices = readLEDDevices(JSONHelper.getObject(_object, "ledDevices"));
 
-            return new ServerInfos(
+            return new ServerInfo(
                     activeEffects,
                     activeColors,
                     adjustments,
@@ -110,14 +108,14 @@ public class InformationReader {
     //endregion
 
     //region Misc
-    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
+    static ServerInfo.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
         String type = JSONHelper.getString(_object, "imageToLedMappingType");
-        return ServerInfos.castStringToLedMappingTyp(type);
+        return ServerInfo.castStringToLedMappingTyp(type);
     }
 
-    static ServerInfos.VideoModes readVideoMode(JSONObject _object) {
+    static ServerInfo.VideoModes readVideoMode(JSONObject _object) {
         String mode = JSONHelper.getString(_object, "videomode");
-        return ServerInfos.castStringToVideoMode(mode);
+        return ServerInfo.castStringToVideoMode(mode);
     }
 
     static String readHostname(JSONObject _object) {

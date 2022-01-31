@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            ServerInfos infos = InformationReader.readResponse(getServerInfos());
+            ServerInfo infos = InformationReader.readResponse(getServerInfos());
             if (infos != null){
                 text.setText(infos.concatenatePrintableString());
             }

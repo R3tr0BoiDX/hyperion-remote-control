@@ -50,7 +50,6 @@ public class SessionInfo {
     }
 
     private static SessionInfo readSession(JSONObject _object) {
-
         //Convert received address to URL object
         Inet4Address ip = null;
         String address = JSONHelper.getString(_object, "address");

@@ -11,7 +11,7 @@ public class InstanceInfo {
     private final Integer instance;
     private final Boolean running;
 
-    public InstanceInfo(
+    InstanceInfo(
             String friendlyName,
             Integer instance,
             Boolean running) {
@@ -47,7 +47,7 @@ public class InstanceInfo {
         return sb.toString();
     }
 
-    String printableString() {
+    public String printableString() {
         return "===InstanceInfo===" + System.lineSeparator() +
                 "friendlyName: " + friendlyName + System.lineSeparator() +
                 "instance: " + instance + System.lineSeparator() +

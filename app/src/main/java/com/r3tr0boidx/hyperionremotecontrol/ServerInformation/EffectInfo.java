@@ -21,7 +21,11 @@ public class EffectInfo {
      */
     protected final Boolean systemEffect;
 
-    public EffectInfo(JSONObject args, String file, String name, String script) {
+    EffectInfo(
+            JSONObject args,
+            String file,
+            String name,
+            String script) {
         this.args = args;
         this.file = file;
         this.name = name;
@@ -47,6 +51,7 @@ public class EffectInfo {
         return new EffectInfo[0];
     }
 
+    //special case, must be default, because ActiveEffectInfo extends this class and needs access to this method
     static EffectInfo readEffect(JSONObject _object, boolean _active) {
         if (_active){
             return new ActiveEffectInfo(
@@ -74,7 +79,7 @@ public class EffectInfo {
         return sb.toString();
     }
 
-    String printableString(boolean _active) {
+    public String printableString(boolean _active) {
         String printable;
 
         if (_active) {
@@ -93,7 +98,7 @@ public class EffectInfo {
         return printable;
     }
 
-    protected Boolean isSystemEffect(String _file) {
+    public Boolean isSystemEffect(String _file) {
         return (_file.charAt(0) == ':');
     }
 
