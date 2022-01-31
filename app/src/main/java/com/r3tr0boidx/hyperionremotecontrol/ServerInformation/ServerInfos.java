@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 public class ServerInfos {
+    //TODO: Should represent order of JSON response
     private final ComponentInfos[] components;
     private final AdjustmentsInfos[] adjustments;
     private final EffectInfos[] effects;
@@ -17,6 +18,8 @@ public class ServerInfos {
     private final SessionInfo[] sessions;
     private final Integer[] activeColors;
     private final ActiveEffectInfo[] activeEffects;
+    private final Boolean cec;
+    private final GrabbersInfo grabbers;
 
     //TODO: Unify name of classes (singular and just "Info")
     public ServerInfos(
@@ -32,7 +35,9 @@ public class ServerInfos {
             LEDInfo[] leds,
             SessionInfo[] sessions,
             Integer[] activeColors,
-            ActiveEffectInfo[] activeEffects) {
+            ActiveEffectInfo[] activeEffects,
+            Boolean cec,
+            GrabbersInfo grabbers) {
         this.components = components;
         this.adjustments = adjustments;
         this.effects = effects;
@@ -46,6 +51,8 @@ public class ServerInfos {
         this.sessions = sessions;
         this.activeColors = activeColors;
         this.activeEffects = activeEffects;
+        this.cec = cec;
+        this.grabbers = grabbers;
     }
 
     //TODO: Refactor to toString() method
@@ -58,11 +65,13 @@ public class ServerInfos {
         Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
         Log.d("LEDInfo", LEDInfo.concatenatePrintableString(leds));
         Log.d("ActiveLedColor", concatenatePrintableActiveColorString(activeColors));
+        Log.d("GrabbersInfo", GrabbersInfo.concatenatePrintableString(grabbers));
 
         Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
         Log.d("ServerInfos", "videoMode: " + videoMode.toString());
         Log.d("ServerInfos", "hostname: " + hostname);
         Log.d("ServerInfos", "prioritiesAutoSelect: " + prioritiesAutoSelect);
+        Log.d("ServerInfos", "cec: " + cec);
     }
 
     public static String concatenatePrintableActiveColorString(Integer[] _colors) {

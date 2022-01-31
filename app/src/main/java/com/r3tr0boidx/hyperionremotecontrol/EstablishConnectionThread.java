@@ -52,6 +52,7 @@ public class EstablishConnectionThread implements Runnable{
         return (HttpsURLConnection) getConnection(serverURL);
     }
 
+    //TODO: try-catch, and then return null if cannot connect
     private static HttpURLConnection getConnection(URL _url) throws IOException {
         HttpURLConnection con;
         if (_url.getProtocol().equals("http")){
@@ -64,7 +65,7 @@ public class EstablishConnectionThread implements Runnable{
         con.setRequestProperty("Accept", "application/json, text/plain, */*");
         con.setDoOutput(true);
         con.connect();
-        Log.v("getConnection", con.toString() + "; " + con.getPermission());
+        Log.v("getConnection", con + "; " + con.getPermission());
         return con;
     }
 

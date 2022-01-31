@@ -40,7 +40,6 @@ public class InformationReader {
     }
 
     /* TODO: Things left
-     * cec
      * grabbers
      * ledDevices
      * transform
@@ -48,6 +47,8 @@ public class InformationReader {
 
     static ServerInfos readInfos(JSONObject _object) {
         try {
+            //TODO: Should use JSONHelper.getArray as fell to be null-"safe"
+            // => requires, that read functions check, that give array is not null
             ComponentInfos[] components = readComponents(_object.getJSONArray("components"));
             AdjustmentsInfos[] adjusts = readAdjustments(_object.getJSONArray("adjustment"));
             EffectInfos[] effects = readEffects(_object.getJSONArray("effects"));
@@ -56,14 +57,14 @@ public class InformationReader {
             LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
             SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
             Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
-
             ActiveEffectInfo[] activeEffects = readActiveEffects(_object.getJSONArray("activeEffects"));
-            Helper.Log(ActiveEffectInfo.concatenatePrintableString(activeEffects));
+            GrabbersInfo grabbers = readGrabbers(_object.getJSONObject("grabbers"));
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
             String hostname = readHostname(_object);
             Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
+            Boolean cec = readCEC(JSONHelper.getObject(_object, "cec"));
 
             return new ServerInfos(
                     components,
@@ -77,13 +78,52 @@ public class InformationReader {
                     instances,
                     leds,
                     sessions,
-                    activeColors, activeEffects);
+                    activeColors,
+                    activeEffects,
+                    cec, grabbers);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
         }
         return null;
     }
+    //endregion
+
+    //region Grabbers
+
+    static GrabbersInfo readGrabbers(JSONObject _object){
+        //Read "active" part
+        String[] activeGrabbers = new String[0];
+        try {
+            JSONArray active = _object.getJSONArray("active");
+            activeGrabbers = new String[active.length()];
+            for (int i = 0; i < activeGrabbers.length; i++) {
+                activeGrabbers[i] = active.getString(i);
+            }
+        } catch (JSONException e) {
+            Log.w("readGrabbers", "Can't read available grabbers");
+            //e.printStackTrace();
+        }
+
+        //Read "available" part
+        String[] availableGrabbers = new String[0];
+        try {
+            JSONArray available = _object.getJSONArray("available");
+            availableGrabbers = new String[available.length()];
+            for (int i = 0; i < availableGrabbers.length; i++) {
+                availableGrabbers[i] = available.getString(i);
+            }
+        } catch (JSONException e) {
+            Log.w("readGrabbers", "Can't read available grabbers");
+            //e.printStackTrace();
+        }
+
+        return new GrabbersInfo(
+                activeGrabbers,
+                availableGrabbers
+        );
+    }
+
     //endregion
 
     //region Active
@@ -331,6 +371,10 @@ public class InformationReader {
 
     static Boolean readPrioritiesAutoSelect(JSONObject _object) {
         return JSONHelper.getBoolean(_object, "priorities_autoselect");
+    }
+
+    static Boolean readCEC(JSONObject _object) {
+        return JSONHelper.getBoolean(_object, "enabled");
     }
     //endregion
 }
