@@ -32,7 +32,7 @@ public class ImageCommand implements ControlCommand {
      * Create a new command, to set a image as source for the colors
      * The official Hyperion documentation recommends priorities between 2 and 99, optimally 50
      * @param priority The priority of the command. Recommended is 50, min. is 1, max. is 253
-     * @param imageData
+     * @param imageData The image, that is to use as source for the colors
      */
     public ImageCommand(int priority, String imageData) {
         if (priority > 0 && priority < 254) {
