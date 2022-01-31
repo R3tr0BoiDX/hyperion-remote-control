@@ -154,6 +154,7 @@ public class EffectInfo {
                     args.add(effectArg);
                 }
 
+                //TODO: read array and object recursiv
                 if (item instanceof JSONArray) {
                     EffectArg<JSONArray> effectArg = new EffectArg<>(key, (JSONArray) item);
                     args.add(effectArg);

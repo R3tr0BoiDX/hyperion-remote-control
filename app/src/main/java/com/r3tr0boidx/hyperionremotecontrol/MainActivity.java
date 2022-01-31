@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
+import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformation;
+import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformationReader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,25 +24,35 @@ public class MainActivity extends AppCompatActivity {
 
     String test_ip = "192.168.2.7";
 
+    //ATTENTION: Very untidy!!! Contains a lot of lazy test code
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTextView();
+        //setServerInfo();
+        setSystemInfo();
     }
 
     //Somehow network, somehow JSON and somehow helper. Don't know where to put this
-    static Response getServerInfos() throws JSONException, InterruptedException {
+    static Response getServerInfo() throws JSONException, InterruptedException {
         JSONObject json = new JSONObject();
         json.put("command", "serverinfo");
         return NetworkManager.getInstance().postQuery(json);
     }
 
-    public void refresh (View _view){
-        setTextView();
+    //Somehow network, somehow JSON and somehow helper. Don't know where to put this
+    static Response getSystemInfo() throws JSONException, InterruptedException {
+        JSONObject json = new JSONObject();
+        json.put("command", "sysinfo");
+        return NetworkManager.getInstance().postQuery(json);
     }
 
-    void setTextView(){
+    public void refresh (View _view){
+        setServerInfo();
+    }
+
+    void setServerInfo(){
         TextView text = findViewById(R.id.textView);
         text.setMovementMethod(new ScrollingMovementMethod());
 
@@ -48,9 +60,27 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            ServerInfo infos = InformationReader.readResponse(getServerInfos());
+            ServerInfo infos = InformationReader.readResponse(getServerInfo());
             if (infos != null){
                 text.setText(infos.concatenatePrintableString());
+            }
+
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void setSystemInfo(){
+        TextView text = findViewById(R.id.textView);
+        text.setMovementMethod(new ScrollingMovementMethod());
+
+        try {
+            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
+            NetworkManager.getInstance().establishConnection(ip, true);
+
+            SystemInformation info = SystemInformationReader.readResponse(getSystemInfo());
+            if (info != null){
+                text.setText(info.concatenatePrintableString());
             }
 
         } catch (IOException | InterruptedException | JSONException e) {

@@ -27,11 +27,11 @@ public class InformationReader {
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
                     return readInfos(infos);
                 } else {
-                    Log.w("readInformations", "Received no Server Informations");
+                    Log.w("readInformations", "Received no server informations");
                 }
             }
         } catch (JSONException e) {
-            Log.e("readInformations", "Not able to parse received data");
+            Log.e("readResponse", "Not able to parse received data");
             e.printStackTrace();
         }
         return null;
