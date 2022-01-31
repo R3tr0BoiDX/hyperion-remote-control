@@ -2,6 +2,7 @@
 
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.r3tr0boidx.hyperionremotecontrol.*;
@@ -19,17 +20,14 @@ import java.net.URL;
 
 public class InformationReader {
 
-    //TODO: https://docs.hyperion-project.org/en/json/ServerInfo.html#instance
-
     //region Basics
     public static ServerInfos readResponse(Response serverResponse) {
         try {
             if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
-                && serverResponse.getResponseBody().getBoolean("success")) {                    //Check if it was successful
+                    && serverResponse.getResponseBody().getBoolean("success")) {                    //Check if it was successful
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
-                    Log.d("JSON Base", infos.toString());
                     return readInfos(infos);
                 } else {
                     Log.w("readInformations", "Received no Server Informations");
@@ -42,6 +40,15 @@ public class InformationReader {
         return null;
     }
 
+    /* TODO: Things left
+     * activeEffects
+     * activeLedColor
+     * cec
+     * grabbers
+     * ledDevices
+     * transform
+     */
+
     static ServerInfos readInfos(JSONObject _object) {
         try {
             ComponentInfos[] components = readComponents(_object.getJSONArray("components"));
@@ -51,6 +58,13 @@ public class InformationReader {
             InstanceInfos[] instances = readInstances(_object.getJSONArray("instance"));
             LEDInfo[] leds = readLEDs(_object.getJSONArray("leds"));
             SessionInfo[] sessions = readSessions(_object.getJSONArray("sessions"));
+
+            Integer[] activeColors = readActiveColors(_object.getJSONArray("activeLedColor"));
+            for (Integer i : activeColors){
+                if (i != null){
+                    Helper.Log(Color.valueOf(i) + "");
+                }
+            }
 
             ServerInfos.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
             ServerInfos.VideoModes videoMode = readVideoMode(_object);
@@ -67,7 +81,8 @@ public class InformationReader {
                     priorities,
                     prioritiesAutoSelect,
                     instances,
-                    leds, sessions);
+                    leds,
+                    sessions);
         } catch (JSONException e) {
             Log.e("readInfos", "Can't read server infos");
             e.printStackTrace();
@@ -75,9 +90,31 @@ public class InformationReader {
         return null;
     }
     //endregion
+
+    //region Active
+    static Integer[] readActiveColors(JSONArray _array) throws JSONException {
+        Integer[] activeColors = new Integer[_array.length()];
+        for (int i = 0; i < activeColors.length; i++) {
+            activeColors[i] = readActiveColor(_array.getJSONObject(i));
+        }
+        return activeColors;
+    }
+
+    static Integer readActiveColor(JSONObject _object) {
+        //Get only RGB, since HSV is depending on RGB in Hyperion code - no need to get that as well
+        JSONArray rgb = JSONHelper.getArray(_object, "RGB Value");
+
+        if (rgb != null){
+            return JSONHelper.castArrayToColor(rgb);
+        }
+        return null;
+    }
+    //endregion
+
+    //region Sessions
     static SessionInfo[] readSessions(JSONArray _array) throws JSONException {
         SessionInfo[] sessions = new SessionInfo[_array.length()];
-        for (int i = 0; i < sessions.length; i++){
+        for (int i = 0; i < sessions.length; i++) {
             sessions[i] = readSession(_array.getJSONObject(i));
         }
         return sessions;
@@ -88,12 +125,12 @@ public class InformationReader {
         //Convert received address to URL object
         URL url = null;
         String address = JSONHelper.getString(_object, "address");
-        if (address != null){
+        if (address != null) {
             try {
                 url = new URL(address);
             } catch (MalformedURLException e) {
                 Log.w("readSession", "Can't read address");
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
 
@@ -106,12 +143,12 @@ public class InformationReader {
                 JSONHelper.getString(_object, "type")
         );
     }
-    //region Sessions
+    //endregion
 
     //region LEDs
     static LEDInfo[] readLEDs(JSONArray _array) throws JSONException {
         LEDInfo[] leds = new LEDInfo[_array.length()];
-        for (int i = 0; i < leds.length; i++){
+        for (int i = 0; i < leds.length; i++) {
             leds[i] = readLED(_array.getJSONObject(i));
         }
         return leds;
@@ -130,7 +167,7 @@ public class InformationReader {
     //region Instances
     static InstanceInfos[] readInstances(JSONArray _array) throws JSONException {
         InstanceInfos[] instances = new InstanceInfos[_array.length()];
-        for (int i = 0; i < instances.length; i++){
+        for (int i = 0; i < instances.length; i++) {
             instances[i] = readInstance(_array.getJSONObject(i));
         }
         return instances;
@@ -148,18 +185,17 @@ public class InformationReader {
     //region Priorities
     static PriorityInfo[] readPriorities(JSONArray _array) throws JSONException {
         PriorityInfo[] priorities = new PriorityInfo[_array.length()];
-        for (int i = 0; i < priorities.length; i++){
+        for (int i = 0; i < priorities.length; i++) {
             priorities[i] = readPriority(_array.getJSONObject(i));
         }
         return priorities;
     }
 
-    static PriorityInfo readPriority(JSONObject _object){
-
+    static PriorityInfo readPriority(JSONObject _object) {
         //Get only RGB, since HSV is depending on RGB in Hyperion code - no need to get that as well
         JSONObject values = JSONHelper.getObject(_object, "value");
         JSONArray rgb = null;
-        if (values != null){
+        if (values != null) {
             rgb = JSONHelper.getArray(values, "RGB");
         }
 
@@ -179,13 +215,13 @@ public class InformationReader {
     //region Effects
     static EffectInfos[] readEffects(JSONArray _array) throws JSONException {
         EffectInfos[] effects = new EffectInfos[_array.length()];
-        for (int i = 0; i < effects.length; i++){
+        for (int i = 0; i < effects.length; i++) {
             effects[i] = readEffect(_array.getJSONObject(i));
         }
         return effects;
     }
 
-    static EffectInfos readEffect(JSONObject _object){
+    static EffectInfos readEffect(JSONObject _object) {
         return new EffectInfos(
                 JSONHelper.getObject(_object, "args"),
                 JSONHelper.getString(_object, "file"),
@@ -198,7 +234,7 @@ public class InformationReader {
     //region Adjustments
     static AdjustmentsInfos[] readAdjustments(JSONArray _array) throws JSONException {
         AdjustmentsInfos[] adjustments = new AdjustmentsInfos[_array.length()];
-        for (int i = 0; i < adjustments.length; i++){
+        for (int i = 0; i < adjustments.length; i++) {
             adjustments[i] = readAdjustment(_array.getJSONObject(i));
         }
         return adjustments;
@@ -232,7 +268,7 @@ public class InformationReader {
     //region Components
     static ComponentInfos[] readComponents(JSONArray _array) throws JSONException {
         ComponentInfos[] component = new ComponentInfos[_array.length()];
-        for (int i = 0; i < component.length; i++){
+        for (int i = 0; i < component.length; i++) {
             component[i] = readComponent(_array.getJSONObject(i));
         }
         return component;
@@ -240,8 +276,8 @@ public class InformationReader {
 
     static ComponentInfos readComponent(JSONObject _object) {
         String type = JSONHelper.getString(_object, "name");
-        if (type != null){
-            if (componentNameExists(type)){
+        if (type != null) {
+            if (componentNameExists(type)) {
                 return new ComponentInfos(
                         ComponentInfos.Component.valueOf(type.toUpperCase()),
                         JSONHelper.getBoolean(_object, "enabled")
@@ -266,21 +302,21 @@ public class InformationReader {
     //endregion
 
     //region Misc
-    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object){
-        String type = JSONHelper.getString(_object,"imageToLedMappingType");
+    static ServerInfos.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
+        String type = JSONHelper.getString(_object, "imageToLedMappingType");
         return ServerInfos.castStringToLedMappingTyp(type);
     }
 
-    static ServerInfos.VideoModes readVideoMode(JSONObject _object){
-        String mode = JSONHelper.getString(_object,"videomode");
+    static ServerInfos.VideoModes readVideoMode(JSONObject _object) {
+        String mode = JSONHelper.getString(_object, "videomode");
         return ServerInfos.castStringToVideoMode(mode);
     }
 
-    static String readHostname(JSONObject _object){
+    static String readHostname(JSONObject _object) {
         return JSONHelper.getString(_object, "hostname");
     }
 
-    static Boolean readPrioritiesAutoSelect(JSONObject _object){
+    static Boolean readPrioritiesAutoSelect(JSONObject _object) {
         return JSONHelper.getBoolean(_object, "priorities_autoselect");
     }
     //endregion
