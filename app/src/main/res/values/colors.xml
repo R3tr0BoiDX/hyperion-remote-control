@@ -7,4 +7,23 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="body_background">#212121</color>
+    <color name="wrapper_background">#333333</color>
+    <color name="navbar_background">#212121</color>
+
+    <color name="body_foreground">#DDDDDD</color>
+    <color name="navbar_foreground">#212121</color>
+
+    <color name="button_hover">#337ab7</color>
+    <color name="button_focus">#337ab7</color>
+    <color name="button_default">#155fa0</color>
+    <color name="button_disabled">#337ab7</color>
+
+    <color name="button_danger_hover">#337ab7</color>
+    <color name="button_danger_focus">#337ab7</color>
+    <color name="button_danger_default">#155fa0</color>
+    <color name="button_danger_disabled">#337ab7</color>
+
 </resources>

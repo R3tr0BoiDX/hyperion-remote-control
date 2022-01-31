@@ -17,6 +17,20 @@ public class ComponentInfos {
         this.state = state;
     }
 
+    public static String concatenatePrintableString(ComponentInfos[] _component) {
+        StringBuilder sb = new StringBuilder();
+        for (ComponentInfos in : _component) {
+            sb.append(in.printableString()).append(System.lineSeparator());
+        }
+        return sb.toString();
+    }
+
+    String printableString() {
+        return "===ComponentInfos===" + System.lineSeparator() +
+                "type: " + type.toString() + System.lineSeparator() +
+                "state: " + state + System.lineSeparator();
+    }
+
     public static void printAll(ComponentInfos[] _components) {
         for (ComponentInfos co : _components) {
             co.print();

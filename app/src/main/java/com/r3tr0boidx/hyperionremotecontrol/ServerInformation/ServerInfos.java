@@ -58,23 +58,24 @@ public class ServerInfos {
         this.ledDevices = ledDevices;
     }
 
-    //TODO: Refactor to toString() method
-    public void print() {
-        ComponentInfos.printAll(components);
-        AdjustmentsInfos.printAll(adjustments);
-        Log.d("EffectInfos", EffectInfos.concatenatePrintableString(effects));
-        PriorityInfo.printAll(priorities);
+    public String concatenatePrintableString() {
+        return ComponentInfos.concatenatePrintableString(components) + System.lineSeparator() +
+                AdjustmentsInfos.concatenatePrintableString(adjustments) + System.lineSeparator() +
+                EffectInfos.concatenatePrintableString(effects) + System.lineSeparator() +
+                PriorityInfo.concatenatePrintableString(priorities) + System.lineSeparator() +
+                InstanceInfos.concatenatePrintableString(instances) + System.lineSeparator() +
+                LEDInfo.concatenatePrintableString(leds) + System.lineSeparator() +
 
-        Log.d("InstanceInfos", InstanceInfos.concatenatePrintableString(instances));
-        Log.d("LEDInfo", LEDInfo.concatenatePrintableString(leds));
-        Log.d("ActiveLedColor", concatenatePrintableActiveColorString(activeColors));
-        Log.d("GrabbersInfo", GrabbersInfo.concatenatePrintableString(grabbers));
+                concatenatePrintableActiveColorString(activeColors) + System.lineSeparator() +
+                ActiveEffectInfo.concatenatePrintableString(activeEffects) + System.lineSeparator() +
+                GrabbersInfo.concatenatePrintableString(grabbers) + System.lineSeparator() +
 
-        Log.d("ServerInfos", "ledMappingType: " + ledMappingType.toString());
-        Log.d("ServerInfos", "videoMode: " + videoMode.toString());
-        Log.d("ServerInfos", "hostname: " + hostname);
-        Log.d("ServerInfos", "prioritiesAutoSelect: " + prioritiesAutoSelect);
-        Log.d("ServerInfos", "cec: " + cec);
+                "===Misc===" + System.lineSeparator() +
+                "ledMappingType: " + ledMappingType.toString() + System.lineSeparator() +
+                "videoMode: " + videoMode.toString() +System.lineSeparator() +
+                "hostname: " + hostname +System.lineSeparator() +
+                "prioritiesAutoSelect: " + prioritiesAutoSelect +System.lineSeparator() +
+                "cec: " + cec;
     }
 
     public static String concatenatePrintableActiveColorString(Integer[] _colors) {

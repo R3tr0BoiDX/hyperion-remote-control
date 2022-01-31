@@ -5,6 +5,8 @@ package com.r3tr0boidx.hyperionremotecontrol;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
@@ -24,21 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //TextView text = findViewById(R.id.textView);
-
-        try {
-            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
-            NetworkManager.getInstance().establishConnection(ip, true);
-
-            ServerInfos infos = InformationReader.readResponse(getServerInfos());
-            if (infos != null){
-                //infos.print();
-            }
-
-        } catch (IOException | InterruptedException | JSONException e) {
-            e.printStackTrace();
-        }
+        setTextView();
     }
 
     //Somehow network, somehow JSON and somehow helper. Don't know where to put this
@@ -46,5 +34,27 @@ public class MainActivity extends AppCompatActivity {
         JSONObject json = new JSONObject();
         json.put("command", "serverinfo");
         return NetworkManager.getInstance().postQuery(json);
+    }
+
+    public void refresh (View _view){
+        setTextView();
+    }
+
+    void setTextView(){
+        TextView text = findViewById(R.id.textView);
+        text.setMovementMethod(new ScrollingMovementMethod());
+
+        try {
+            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
+            NetworkManager.getInstance().establishConnection(ip, true);
+
+            ServerInfos infos = InformationReader.readResponse(getServerInfos());
+            if (infos != null){
+                text.setText(infos.concatenatePrintableString());
+            }
+
+        } catch (IOException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

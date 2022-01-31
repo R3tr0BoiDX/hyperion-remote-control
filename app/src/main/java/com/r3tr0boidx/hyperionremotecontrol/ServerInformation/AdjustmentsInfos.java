@@ -5,6 +5,8 @@ import android.util.Log;
 
 public class AdjustmentsInfos {
 
+    //TODO: Check if colors arent null
+
     private final String id;    //Short identifier
 
     private final Integer red;      //Color
@@ -58,33 +60,35 @@ public class AdjustmentsInfos {
         this.brightnessCompensation = brightnessCompensation;
     }
 
-    public void print() {
-        Log.d("AdjustmentsInfos", "===Optional===");
-        Log.d("AdjustmentsInfos", "id: " + id);
-
-        Log.d("AdjustmentsInfos", "red: " + Color.valueOf(red));
-        Log.d("AdjustmentsInfos", "green: " + Color.valueOf(green));
-        Log.d("AdjustmentsInfos", "blue: " + Color.valueOf(blue));
-        Log.d("AdjustmentsInfos", "yellow: " + Color.valueOf(yellow));
-        Log.d("AdjustmentsInfos", "cyan: " + Color.valueOf(cyan));
-        Log.d("AdjustmentsInfos", "magenta: " + Color.valueOf(magenta));
-        Log.d("AdjustmentsInfos", "white: " + Color.valueOf(white));
-
-        Log.d("AdjustmentsInfos", "gammaBlue: " + gammaBlue);
-        Log.d("AdjustmentsInfos", "gammaGreen: " + gammaGreen);
-        Log.d("AdjustmentsInfos", "gammaRed: " + gammaRed);
-
-        Log.d("AdjustmentsInfos", "backlightThreshold: " + backlightThreshold);
-        Log.d("AdjustmentsInfos", "backlightColored: " + backlightColored);
-
-        Log.d("AdjustmentsInfos", "brightness: " + brightness);
-        Log.d("AdjustmentsInfos", "backlightThreshold" + backlightThreshold);
+    public static String concatenatePrintableString(AdjustmentsInfos[] _adjustments) {
+        StringBuilder sb = new StringBuilder();
+        for (AdjustmentsInfos in : _adjustments) {
+            sb.append(in.printableString()).append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 
-    public static void printAll(AdjustmentsInfos[] _adjustments){
-        for (AdjustmentsInfos ad : _adjustments){
-            ad.print();
-        }
+    String printableString() {
+        return "===AdjustmentsInfos===" + System.lineSeparator() +
+                "id: " + id + System.lineSeparator() +
+
+                "red: " + Color.valueOf(red) + System.lineSeparator() +
+                "green: " + Color.valueOf(green) + System.lineSeparator() +
+                "blue: " + Color.valueOf(blue) + System.lineSeparator() +
+                "yellow: " + Color.valueOf(yellow) + System.lineSeparator() +
+                "cyan: " + Color.valueOf(cyan) + System.lineSeparator() +
+                "magenta: " + Color.valueOf(magenta) + System.lineSeparator() +
+                "white: " + Color.valueOf(white) + System.lineSeparator() +
+
+                "gammaBlue: " + gammaBlue + System.lineSeparator() +
+                "gammaGreen: " + gammaGreen + System.lineSeparator() +
+                "gammaRed: " + gammaRed + System.lineSeparator() +
+
+                "backlightThreshold: " + backlightThreshold + System.lineSeparator() +
+                "backlightColored: " + backlightColored + System.lineSeparator() +
+
+                "brightness: " + brightness + System.lineSeparator() +
+                "brightnessCompensation: " + brightnessCompensation + System.lineSeparator();
     }
 
     public Boolean getBacklightColored() {

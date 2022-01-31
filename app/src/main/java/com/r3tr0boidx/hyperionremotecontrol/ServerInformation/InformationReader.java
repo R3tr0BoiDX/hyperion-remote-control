@@ -1,4 +1,4 @@
-//TODO: Subscribe, for no need to poll: https://docs.hyperion-project.org/en/json/subscribe.html
+//TODO: Subscribe, for no need to poll/pull: https://docs.hyperion-project.org/en/json/subscribe.html
 
 package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
@@ -24,7 +24,7 @@ public class InformationReader {
         try {
             if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
-                    && serverResponse.getResponseBody().getBoolean("success")) {                    //Check if it was successful
+                    && serverResponse.getResponseBody().getBoolean("success")) {                //Check if it was successful
 
                     JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
                     return readInfos(infos);

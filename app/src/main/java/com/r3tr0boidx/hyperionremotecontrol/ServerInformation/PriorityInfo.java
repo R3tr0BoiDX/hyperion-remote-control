@@ -33,24 +33,28 @@ public class PriorityInfo {
         this.value = value;
     }
 
-    public static void printAll(PriorityInfo[] _priorities) {
-        for (PriorityInfo pr : _priorities) {
-            pr.print();
+    public static String concatenatePrintableString(PriorityInfo[] _priorities) {
+        StringBuilder sb = new StringBuilder();
+        for (PriorityInfo in : _priorities) {
+            sb.append(in.printableString()).append(System.lineSeparator());
         }
+        return sb.toString();
     }
 
-    public void print() {
-        Log.d("PriorityInfo", "===Required===");
-        Log.d("PriorityInfo", "priority: " + priority);
-        Log.d("PriorityInfo", "duration_ms: " + duration_ms);
-        Log.d("PriorityInfo", "owner: " + owner);
-        Log.d("PriorityInfo", "componentId: " + componentId);
-        Log.d("PriorityInfo", "origin: " + origin);
-        Log.d("PriorityInfo", "active: " + active);
-        Log.d("PriorityInfo", "visible: " + visible);
+    String printableString() {
+        String print = "===PriorityInfo===" + System.lineSeparator() +
+                "priority: " + priority + System.lineSeparator() +
+                "duration_ms: " + duration_ms + System.lineSeparator() +
+                "owner: " + owner + System.lineSeparator() +
+                "componentId: " + componentId + System.lineSeparator() +
+                "origin: " + origin + System.lineSeparator() +
+                "active: " + active + System.lineSeparator() +
+                "visible: " + visible + System.lineSeparator();
         if (value != null){
-            Log.d("PriorityInfo", "value: " + Color.valueOf(value));
+            print += "value: " + Color.valueOf(value) + System.lineSeparator();
         }
+
+        return print;
     }
 
     public Integer getPriority() {
