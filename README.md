@@ -6,8 +6,8 @@ Currently WIP and not functional.
 # Road map
 - [ ] Java wrapper
   - [x] Server infos
-  - [ ] System infos <-- Here right now
-  - [ ] Control
+  - [x] System infos
+  - [ ] Control <-- Here right now
   - [ ] Authorization
 - [ ]  Android apps
   - [ ] Smart phone app
