@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setServerInfo();
-        setSystemInfo();
     }
 
     //Somehow network, somehow JSON and somehow helper. Don't know where to put this
@@ -48,8 +46,11 @@ public class MainActivity extends AppCompatActivity {
         return NetworkManager.getInstance().postQuery(json);
     }
 
-    public void refresh (View _view){
+    public void refreshServer (View _view){
         setServerInfo();
+    }
+    public void refreshSystem (View _view){
+        setSystemInfo();
     }
 
     void setServerInfo(){
