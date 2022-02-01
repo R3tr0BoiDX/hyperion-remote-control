@@ -10,6 +10,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.r3tr0boidx.hyperionremotecontrol.Control.AdjustmentCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ClearCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.EffectCommand;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            ClearCommand command = new ClearCommand(2);
+            AdjustmentCommand command = new AdjustmentCommand();
 
             Helper.Log(command.buildCommand().toString());
             command.execute();

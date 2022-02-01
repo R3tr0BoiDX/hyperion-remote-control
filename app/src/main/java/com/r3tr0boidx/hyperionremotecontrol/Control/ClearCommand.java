@@ -38,7 +38,7 @@ public class ClearCommand implements ControlCommand {
     public JSONObject buildCommand() {
         try {
             JSONObject json = new JSONObject();
-            json.put(Controller.COMMAND_KEY, COMMAND);
+            json.put(ControlHelper.COMMAND_KEY, COMMAND);
             json.put("priority", priority);
 
             return json;

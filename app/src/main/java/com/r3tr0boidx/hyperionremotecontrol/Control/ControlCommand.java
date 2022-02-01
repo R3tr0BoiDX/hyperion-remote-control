@@ -16,13 +16,13 @@ public interface ControlCommand {
     /**
      * The Hyperion JSON command
      */
-    static final String COMMAND = "";
+     String COMMAND = "";
 
     /**
      * Execute the command
      * @return The response, that was given to that command. Containing the HTTP code, HTTP message and the JSON answer
      */
-    public default Response execute(){
+    default Response execute(){
         JSONObject json = buildCommand();
         try {
             return NetworkManager.getInstance().postQuery(json);
@@ -37,5 +37,5 @@ public interface ControlCommand {
      * Build the command
      * @return The executable JSON command
      */
-    public JSONObject buildCommand();
+    JSONObject buildCommand();
 }

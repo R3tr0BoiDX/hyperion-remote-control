@@ -4,7 +4,6 @@ package com.r3tr0boidx.hyperionremotecontrol.Control;
 
 import android.util.Log;
 
-import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
 import org.json.JSONException;
@@ -47,7 +46,7 @@ public class EffectCommand implements ControlCommand {
     public JSONObject buildCommand() {
         try {
             JSONObject json = new JSONObject();
-            json.put(Controller.COMMAND_KEY, COMMAND);
+            json.put(ControlHelper.COMMAND_KEY, COMMAND);
 
             JSONObject effectContainer = new JSONObject();
             effectContainer.put("name", effect);
