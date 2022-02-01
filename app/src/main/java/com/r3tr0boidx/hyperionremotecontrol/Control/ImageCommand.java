@@ -1,5 +1,3 @@
-//TODO: Implement file format
-
 package com.r3tr0boidx.hyperionremotecontrol.Control;
 
 import android.util.Log;
@@ -22,10 +20,10 @@ public class ImageCommand implements ControlCommand {
     //not required
     private Integer duration;
     private String origin;
-    private Integer imageWidth;     //Not mentioned in official documentation
-    private Integer imageHeight;    //Not mentioned in official documentation
-    private String format = "auto"; //Not sure, how to use this correctly, see https://doc.qt.io/qt-5/qimagereader.html#supportedImageFormats
-    private Integer scale;          //Not mentioned in official documentation
+    private Integer imageWidth;                     //Not mentioned in official documentation
+    private Integer imageHeight;                    //Not mentioned in official documentation
+    private FormatTypes format = FormatTypes.auto;  //Not sure, how to use this correctly, see https://doc.qt.io/qt-5/qimagereader.html#supportedImageFormats
+    private Integer scale;                          //Not mentioned in official documentation
     private String name;
 
     /**
@@ -73,7 +71,7 @@ public class ImageCommand implements ControlCommand {
             }
 
             if (format != null){
-                json.put("format", format);
+                json.put("format", format.toString());
             }
 
             if (scale != null){
@@ -140,7 +138,7 @@ public class ImageCommand implements ControlCommand {
      *
      * @param format A supported format file format. WIP right now
      */
-    public void setFormat(String format) {
+    public void setFormat(FormatTypes format) {
         this.format = format;
     }
 
@@ -167,9 +165,23 @@ public class ImageCommand implements ControlCommand {
         this.name = name;
     }
 
-    /*
-    enum FormatTypes{
-
-    }
+    /**
+     * Format, that can be used for the images.
+     * See https://doc.qt.io/qt-5/qimagereader.html#supportedImageFormats for more informations
+     * Use "auto", to have Hyperion figure type out
      */
+    enum FormatTypes{
+        bmp,
+        gif,
+        jpg,
+        png,
+        pbm,
+        pgm,
+        ppm,
+        xbm,
+        xpm,
+        svg,
+        auto //Hyperion will figure it out
+    }
+
 }
