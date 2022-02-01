@@ -2,7 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol.Control;
 
 import android.util.Log;
 
-import com.r3tr0boidx.hyperionremotecontrol.Modes;
+import com.r3tr0boidx.hyperionremotecontrol.Types;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
 import org.json.JSONException;
@@ -12,9 +12,13 @@ public class LedMappingCommand implements ControlCommand{
 
     private final String COMMAND = "processing";
 
-    private final Modes.ImageToLedMappingTypes type;
+    private final Types.ImageToLedMappingTypes type;
 
-    public LedMappingCommand(Modes.ImageToLedMappingTypes type) {
+    /**
+     * Switch the image to led mapping mode.
+     * @param type Possible values are unicolor_mean (led color based on whole picture color) and multicolor_mean (led colors based on led layout)
+     */
+    public LedMappingCommand(Types.ImageToLedMappingTypes type) {
         this.type = type;
     }
 

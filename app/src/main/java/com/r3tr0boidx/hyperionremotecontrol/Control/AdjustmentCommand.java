@@ -32,6 +32,12 @@ public class AdjustmentCommand implements ControlCommand {
     private Integer brightness;               //minimum: 0 maximum 100 step of 1
     private Integer brightnessCompensation;   //minimum: 0 maximum 100 step of 1
 
+    /**
+     * Adjustments reflect the color calibration
+     */
+    public AdjustmentCommand() {
+    }
+
     @Override
     public Response execute() {
         return ControlCommand.super.execute();

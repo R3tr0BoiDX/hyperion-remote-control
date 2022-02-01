@@ -2,7 +2,7 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
 
-import com.r3tr0boidx.hyperionremotecontrol.Modes;
+import com.r3tr0boidx.hyperionremotecontrol.Types;
 
 public class ServerInfo {
     private final ActiveEffectInfo[] activeEffects;
@@ -13,7 +13,7 @@ public class ServerInfo {
     private final EffectInfo[] effects;
     private final GrabbersInfo grabbers;
     private final String hostname;
-    private final Modes.ImageToLedMappingTypes ledMappingType;
+    private final Types.ImageToLedMappingTypes ledMappingType;
     private final InstanceInfo[] instances;
     private final String[] ledDevices;
     private final LEDInfo[] leds;
@@ -21,7 +21,7 @@ public class ServerInfo {
     private final Boolean prioritiesAutoSelect;
     private final SessionInfo[] sessions;
     private final TransformInfo[] transforms;
-    private final Modes.VideoModes videoMode;
+    private final Types.VideoModes videoMode;
 
     public ServerInfo(
             ActiveEffectInfo[] activeEffects,
@@ -32,7 +32,7 @@ public class ServerInfo {
             EffectInfo[] effects,
             GrabbersInfo grabbers,
             String hostname,
-            Modes.ImageToLedMappingTypes ledMappingType,
+            Types.ImageToLedMappingTypes ledMappingType,
             InstanceInfo[] instances,
             String[] ledDevices,
             LEDInfo[] leds,
@@ -40,7 +40,7 @@ public class ServerInfo {
             Boolean prioritiesAutoSelect,
             SessionInfo[] sessions,
             TransformInfo[] transforms,
-            Modes.VideoModes videoMode) {
+            Types.VideoModes videoMode) {
         this.activeEffects = activeEffects;
         this.activeColors = activeColors;
         this.adjustments = adjustments;
@@ -134,7 +134,7 @@ public class ServerInfo {
         return hostname;
     }
 
-    public Modes.ImageToLedMappingTypes getLedMappingType() {
+    public Types.ImageToLedMappingTypes getLedMappingType() {
         return ledMappingType;
     }
 
@@ -166,7 +166,7 @@ public class ServerInfo {
         return transforms;
     }
 
-    public Modes.VideoModes getVideoMode() {
+    public Types.VideoModes getVideoMode() {
         return videoMode;
     }
 }

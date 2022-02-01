@@ -2,7 +2,10 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.util.Log;
 
+import androidx.core.view.KeyEventDispatcher;
+
 import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
+import com.r3tr0boidx.hyperionremotecontrol.Types;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,11 +13,11 @@ import org.json.JSONObject;
 
 public class ComponentInfo {
 
-    private final Component type;
+    private final Types.Component type;
     private final Boolean state;
 
     ComponentInfo(
-            Component type,
+            Types.Component type,
             Boolean state) {
         this.type = type;
         this.state = state;
@@ -36,7 +39,7 @@ public class ComponentInfo {
         if (type != null) {
             if (componentNameExists(type)) {
                 return new ComponentInfo(
-                        ComponentInfo.Component.valueOf(type.toUpperCase()),
+                        Types.Component.valueOf(type.toUpperCase()),
                         JSONHelper.getBoolean(_object, "enabled")
                 );
             } else {
@@ -49,7 +52,7 @@ public class ComponentInfo {
     }
 
     private static boolean componentNameExists(String test) {
-        for (ComponentInfo.Component c : ComponentInfo.Component.values()) {
+        for (Types.Component c : Types.Component.values()) {
             if (c.name().equals(test)) {
                 return true;
             }
@@ -71,23 +74,11 @@ public class ComponentInfo {
                 "state: " + state + System.lineSeparator();
     }
 
-    public Component getType() {
+    public Types.Component getType() {
         return type;
     }
 
     public Boolean getState() {
         return state;
-    }
-
-    //Warning: Must be all upper case, else Component.valueOf("String") isn't working
-    enum Component{
-        ALL,                //Hyperion Instance itself
-        SMOOTHING,          //Smoothing
-        BLACKBORDER,        //Detect black borders
-        FORWARDER,          //JSON/Proto forwarder
-        BOBLIGHTSERVER,     //Boblight server
-        GRABBER,            //Platform capture
-        V4L,                //Video4Linux USB capture device
-        LEDDEVICE           //Led device start/stops output of the configured led device
     }
 }

@@ -107,15 +107,15 @@ public class JSONHelper {
         return rgb;
     }
 
-    public static Modes.VideoModes castStringToVideoMode(String _mode) {
+    public static Types.VideoModes castStringToVideoMode(String _mode) {
         if (_mode != null) {
             switch (_mode) {
                 case "2D":
-                    return Modes.VideoModes.two_D;
+                    return Types.VideoModes.two_D;
                 case "3DSBS":
-                    return Modes.VideoModes.three_D_SBS;
+                    return Types.VideoModes.three_D_SBS;
                 case "3DTAB":
-                    return Modes.VideoModes.three_D_TAB;
+                    return Types.VideoModes.three_D_TAB;
                 default:
                     return null;
             }
@@ -123,7 +123,7 @@ public class JSONHelper {
         return null;
     }
 
-    public static String castVideoModeToString(Modes.VideoModes _mode) {
+    public static String castVideoModeToString(Types.VideoModes _mode) {
         if (_mode != null) {
             switch (_mode) {
                 case two_D:

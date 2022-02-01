@@ -10,12 +10,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
-import com.r3tr0boidx.hyperionremotecontrol.Control.AdjustmentCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.ClearCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.EffectCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.ImageCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.LedMappingCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Control.ComponentsCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.VideoModeCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
@@ -48,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            VideoModeCommand command = new VideoModeCommand(Modes.VideoModes.two_D);
+            ColorCommand colorCommand = new ColorCommand(50, Color.RED);
+            colorCommand.execute();
+
+            ComponentsCommand command = new ComponentsCommand(Types.Component.ALL, true);
 
             Helper.Log(command.buildCommand().toString());
             //command.execute();

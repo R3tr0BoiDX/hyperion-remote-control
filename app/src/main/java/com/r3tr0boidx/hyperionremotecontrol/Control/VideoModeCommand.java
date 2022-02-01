@@ -3,7 +3,7 @@ package com.r3tr0boidx.hyperionremotecontrol.Control;
 import android.util.Log;
 
 import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
-import com.r3tr0boidx.hyperionremotecontrol.Modes;
+import com.r3tr0boidx.hyperionremotecontrol.Types;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
 import org.json.JSONException;
@@ -12,9 +12,13 @@ import org.json.JSONObject;
 public class VideoModeCommand implements ControlCommand{
     private final String COMMAND = "videomode";
 
-    private final Modes.VideoModes mode;
+    private final Types.VideoModes mode;
 
-    public VideoModeCommand(Modes.VideoModes mode) {
+    /**
+     * Switch the video mode
+     * @param mode Possible values are 2D, 3DSBS and 3DTAB
+     */
+    public VideoModeCommand(Types.VideoModes mode) {
         this.mode = mode;
     }
 
