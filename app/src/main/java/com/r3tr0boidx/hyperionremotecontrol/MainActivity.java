@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ComponentsCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Control.SourceSelectionCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.VideoModeCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            ColorCommand colorCommand = new ColorCommand(50, Color.RED);
-            colorCommand.execute();
+            Response r = getServerInfo();
+            ServerInfo info = InformationReader.readResponse(r);
 
-            ComponentsCommand command = new ComponentsCommand(Types.Component.ALL, true);
+            SourceSelectionCommand command;
+            assert info != null;
+            command = new SourceSelectionCommand(info.getPriorities()[0]);
 
             Helper.Log(command.buildCommand().toString());
             //command.execute();
@@ -58,17 +63,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Somehow network, somehow JSON and somehow helper. Don't know where to put this => to extra class
-    static Response getServerInfo() throws JSONException, InterruptedException {
-        JSONObject json = new JSONObject();
-        json.put("command", "serverinfo");
-        return NetworkManager.getInstance().postQuery(json);
+    static Response getServerInfo() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("command", "serverinfo");
+            return NetworkManager.getInstance().postQuery(json);
+        } catch (JSONException e) {
+            Log.e("getServerInfo", "Can't create json query!");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            Log.e("getServerInfo", "Network error! Can't recieve answer");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //Somehow network, somehow JSON and somehow helper. Don't know where to put this
-    static Response getSystemInfo() throws JSONException, InterruptedException {
-        JSONObject json = new JSONObject();
-        json.put("command", "sysinfo");
-        return NetworkManager.getInstance().postQuery(json);
+    static Response getSystemInfo() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("command", "sysinfo");
+            return NetworkManager.getInstance().postQuery(json);
+        } catch (JSONException e) {
+            Log.e("getSystemInfo", "Can't create json query!");
+            //e.printStackTrace();
+        } catch (InterruptedException e) {
+            Log.e("getSystemInfo", "Network error! Can't recieve answer");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void refreshServer (View _view){
@@ -91,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 text.setText(infos.concatenatePrintableString());
             }
 
-        } catch (IOException | InterruptedException | JSONException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -104,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
             NetworkManager.getInstance().establishConnection(ip, true);
 
-            SystemInformation info = SystemInformationReader.readResponse(getSystemInfo());
+            SystemInformation info = SystemInformationReader.readResponse(Objects.requireNonNull(getSystemInfo()));
             if (info != null){
                 text.setText(info.concatenatePrintableString());
             }
 
-        } catch (IOException | InterruptedException | JSONException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

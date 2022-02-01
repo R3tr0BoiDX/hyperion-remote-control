@@ -19,21 +19,23 @@ import java.net.HttpURLConnection;
 public class InformationReader {
 
     //region Basics
-    public static ServerInfo readResponse(Response serverResponse) {
-        try {
-            if (serverResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                if (serverResponse.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
-                    && serverResponse.getResponseBody().getBoolean("success")) {                //Check if it was successful
+    public static ServerInfo readResponse(Response _response) {
+        if (_response != null){
+            try {
+                if (_response.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    if (_response.getResponseBody().getString("command").equals("serverinfo")  //Check it was the right command
+                            && _response.getResponseBody().getBoolean("success")) {                //Check if it was successful
 
-                    JSONObject infos = serverResponse.getResponseBody().getJSONObject("info");
-                    return readInfos(infos);
-                } else {
-                    Log.w("readInformations", "Received no server informations");
+                        JSONObject infos = _response.getResponseBody().getJSONObject("info");
+                        return readInfos(infos);
+                    } else {
+                        Log.w("readInformations", "Received no server informations");
+                    }
                 }
+            } catch (JSONException e) {
+                Log.e("readResponse", "Not able to parse received data");
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            Log.e("readResponse", "Not able to parse received data");
-            e.printStackTrace();
         }
         return null;
     }
