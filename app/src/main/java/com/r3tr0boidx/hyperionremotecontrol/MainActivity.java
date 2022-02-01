@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Debug;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ComponentsCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Control.InstancesCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.SourceSelectionCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.VideoModeCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
@@ -49,13 +51,14 @@ public class MainActivity extends AppCompatActivity {
 
             Response r = getServerInfo();
             ServerInfo info = InformationReader.readResponse(r);
-
-            SourceSelectionCommand command;
             assert info != null;
-            command = new SourceSelectionCommand(info.getPriorities()[0]);
+
+            Helper.Log(info.getInstances()[0].printableString());
+
+            InstancesCommand command = new InstancesCommand(InstancesCommand.InstancesCommandType.stopInstance, info.getInstances()[0]);
 
             Helper.Log(command.buildCommand().toString());
-            //command.execute();
+            command.execute();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
