@@ -51,8 +51,8 @@ public class InformationReader {
             GrabbersInfo grabbers = GrabbersInfo.readGrabbers(JSONHelper.getObject(_object,"grabbers"));
             TransformInfo[] transforms = TransformInfo.readTransfroms(JSONHelper.getArray(_object,"transform"));
 
-            ServerInfo.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
-            ServerInfo.VideoModes videoMode = readVideoMode(_object);
+            Modes.ImageToLedMappingTypes ledMappingType = readLedMappingType(_object);
+            Modes.VideoModes videoMode = readVideoMode(_object);
             String hostname = readHostname(_object);
             Boolean prioritiesAutoSelect = readPrioritiesAutoSelect(_object);
             Boolean cec = readCEC(JSONHelper.getObject(_object, "cec"));
@@ -109,12 +109,12 @@ public class InformationReader {
     //endregion
 
     //region Misc
-    static ServerInfo.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
+    static Modes.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
         String type = JSONHelper.getString(_object, "imageToLedMappingType");
         return ServerInfo.castStringToLedMappingTyp(type);
     }
 
-    static ServerInfo.VideoModes readVideoMode(JSONObject _object) {
+    static Modes.VideoModes readVideoMode(JSONObject _object) {
         String mode = JSONHelper.getString(_object, "videomode");
         return ServerInfo.castStringToVideoMode(mode);
     }

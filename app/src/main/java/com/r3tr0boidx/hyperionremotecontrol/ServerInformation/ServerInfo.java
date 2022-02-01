@@ -2,6 +2,8 @@ package com.r3tr0boidx.hyperionremotecontrol.ServerInformation;
 
 import android.graphics.Color;
 
+import com.r3tr0boidx.hyperionremotecontrol.Modes;
+
 public class ServerInfo {
     private final ActiveEffectInfo[] activeEffects;
     private final Integer[] activeColors;
@@ -11,7 +13,7 @@ public class ServerInfo {
     private final EffectInfo[] effects;
     private final GrabbersInfo grabbers;
     private final String hostname;
-    private final ImageToLedMappingTypes ledMappingType;
+    private final Modes.ImageToLedMappingTypes ledMappingType;
     private final InstanceInfo[] instances;
     private final String[] ledDevices;
     private final LEDInfo[] leds;
@@ -19,7 +21,7 @@ public class ServerInfo {
     private final Boolean prioritiesAutoSelect;
     private final SessionInfo[] sessions;
     private final TransformInfo[] transforms;
-    private final VideoModes videoMode;
+    private final Modes.VideoModes videoMode;
 
     public ServerInfo(
             ActiveEffectInfo[] activeEffects,
@@ -30,7 +32,7 @@ public class ServerInfo {
             EffectInfo[] effects,
             GrabbersInfo grabbers,
             String hostname,
-            ImageToLedMappingTypes ledMappingType,
+            Modes.ImageToLedMappingTypes ledMappingType,
             InstanceInfo[] instances,
             String[] ledDevices,
             LEDInfo[] leds,
@@ -38,7 +40,7 @@ public class ServerInfo {
             Boolean prioritiesAutoSelect,
             SessionInfo[] sessions,
             TransformInfo[] transforms,
-            VideoModes videoMode) {
+            Modes.VideoModes videoMode) {
         this.activeEffects = activeEffects;
         this.activeColors = activeColors;
         this.adjustments = adjustments;
@@ -100,13 +102,13 @@ public class ServerInfo {
         return sb.toString();
     }
 
-    static ImageToLedMappingTypes castStringToLedMappingTyp(String _type) {
+    static Modes.ImageToLedMappingTypes castStringToLedMappingTyp(String _type) {
         if (_type != null) {
             switch (_type) {
                 case "unicolor_mean":
-                    return ImageToLedMappingTypes.unicolor_mean;
+                    return Modes.ImageToLedMappingTypes.unicolor_mean;
                 case "multicolor_mean":
-                    return ImageToLedMappingTypes.multicolor_mean;
+                    return Modes.ImageToLedMappingTypes.multicolor_mean;
                 default:
                     return null;
             }
@@ -114,15 +116,15 @@ public class ServerInfo {
         return null;
     }
 
-    static VideoModes castStringToVideoMode(String _mode) {
+    static Modes.VideoModes castStringToVideoMode(String _mode) {
         if (_mode != null) {
             switch (_mode) {
                 case "2D":
-                    return VideoModes.two_D;
+                    return Modes.VideoModes.two_D;
                 case "3DSBS":
-                    return VideoModes.three_D_SBS;
+                    return Modes.VideoModes.three_D_SBS;
                 case "3DTAB":
-                    return VideoModes.three_D_TAB;
+                    return Modes.VideoModes.three_D_TAB;
                 default:
                     return null;
             }
@@ -162,7 +164,7 @@ public class ServerInfo {
         return hostname;
     }
 
-    public ImageToLedMappingTypes getLedMappingType() {
+    public Modes.ImageToLedMappingTypes getLedMappingType() {
         return ledMappingType;
     }
 
@@ -194,18 +196,7 @@ public class ServerInfo {
         return transforms;
     }
 
-    public VideoModes getVideoMode() {
+    public Modes.VideoModes getVideoMode() {
         return videoMode;
-    }
-
-    enum ImageToLedMappingTypes {
-        unicolor_mean,
-        multicolor_mean
-    }
-
-    enum VideoModes {
-        two_D,
-        three_D_SBS,
-        three_D_TAB
     }
 }
