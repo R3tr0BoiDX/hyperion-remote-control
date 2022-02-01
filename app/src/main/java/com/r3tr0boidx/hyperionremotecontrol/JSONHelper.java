@@ -106,4 +106,34 @@ public class JSONHelper {
 
         return rgb;
     }
+
+    public static Modes.VideoModes castStringToVideoMode(String _mode) {
+        if (_mode != null) {
+            switch (_mode) {
+                case "2D":
+                    return Modes.VideoModes.two_D;
+                case "3DSBS":
+                    return Modes.VideoModes.three_D_SBS;
+                case "3DTAB":
+                    return Modes.VideoModes.three_D_TAB;
+                default:
+                    return null;
+            }
+        }
+        return null;
+    }
+
+    public static String castVideoModeToString(Modes.VideoModes _mode) {
+        if (_mode != null) {
+            switch (_mode) {
+                case two_D:
+                    return "2D";
+                case three_D_SBS:
+                    return "3DSBS";
+                case three_D_TAB:
+                    return "3DTAB";
+            }
+        }
+        return null;
+    }
 }

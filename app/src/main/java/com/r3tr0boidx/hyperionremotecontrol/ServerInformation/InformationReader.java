@@ -111,12 +111,12 @@ public class InformationReader {
     //region Misc
     static Modes.ImageToLedMappingTypes readLedMappingType(JSONObject _object) {
         String type = JSONHelper.getString(_object, "imageToLedMappingType");
-        return ServerInfo.castStringToLedMappingTyp(type);
+        return Modes.ImageToLedMappingTypes.valueOf(type);
     }
 
     static Modes.VideoModes readVideoMode(JSONObject _object) {
         String mode = JSONHelper.getString(_object, "videomode");
-        return ServerInfo.castStringToVideoMode(mode);
+        return JSONHelper.castStringToVideoMode(mode);
     }
 
     static String readHostname(JSONObject _object) {

@@ -102,36 +102,6 @@ public class ServerInfo {
         return sb.toString();
     }
 
-    static Modes.ImageToLedMappingTypes castStringToLedMappingTyp(String _type) {
-        if (_type != null) {
-            switch (_type) {
-                case "unicolor_mean":
-                    return Modes.ImageToLedMappingTypes.unicolor_mean;
-                case "multicolor_mean":
-                    return Modes.ImageToLedMappingTypes.multicolor_mean;
-                default:
-                    return null;
-            }
-        }
-        return null;
-    }
-
-    static Modes.VideoModes castStringToVideoMode(String _mode) {
-        if (_mode != null) {
-            switch (_mode) {
-                case "2D":
-                    return Modes.VideoModes.two_D;
-                case "3DSBS":
-                    return Modes.VideoModes.three_D_SBS;
-                case "3DTAB":
-                    return Modes.VideoModes.three_D_TAB;
-                default:
-                    return null;
-            }
-        }
-        return null;
-    }
-
     public ActiveEffectInfo[] getActiveEffects() {
         return activeEffects;
     }
