@@ -1,55 +1,42 @@
+//TODO: try-cath aus Frage umsetzten https://stackoverflow.com/q/3584210/7184809 - noch relevant?
+
 package com.r3tr0boidx.hyperionremotecontrol.Networking;
 
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 
 public class NetworkManager {
-    public static final int HTTP_PORT = 8090;
-    public static final int HTTPS_PORT = 8092;
-    public static final String URL_FILE = "json-rpc";
 
-    private HttpURLConnection connection = null;
+    private HyperionConnection connection;
+
     private static final NetworkManager instance = new NetworkManager();
 
-    private NetworkManager(){
+    private NetworkManager() {
         Log.v("NetworkManager", "Created NetworkManager");
     }
 
-    //TODO: try-cath aus Frage umsetzten https://stackoverflow.com/q/3584210/7184809
-
-    public void establishConnection(Inet4Address _ip) throws InterruptedException {
-        establishConnection(_ip, false);
+    public boolean establishConnection(Inet4Address _ip, HyperionConnection _connection){
+        connection = _connection;
+        return _connection.connect(_ip);
     }
 
-    public void establishConnection(Inet4Address _ip, boolean _unsecure) throws InterruptedException {
-        EstablishConnectionThread establishConnectionThread = new EstablishConnectionThread(_ip, _unsecure);
-        Thread thread = new Thread(establishConnectionThread);
-        thread.start();
-        thread.join();
-
-        connection = establishConnectionThread.getConnection();
-        Log.v("establishConnection", "Started network thread");
-    }
-
-    public Response postQuery(JSONObject _query) throws InterruptedException {
+    public Response writeQuery(JSONObject _query) {
         if (connection != null){
-            PostQueryThread queryThread = new PostQueryThread(_query, connection);
-            Thread thread = new Thread(queryThread);
-            thread.start();
-            thread.join();
-
-            return queryThread.getResponse();
-        } else {
-            throw new NullPointerException("Connection is not established");
+            return connection.write(_query);
         }
+        Log.e("writeQuery", "Connection is empty!");
+        return null;
     }
 
-    public void disconnect(){
-        new Thread(() -> connection.disconnect());
+    public boolean disconnect() {
+        if (connection != null){
+            return connection.disconnect();
+        }
+        Log.e("writeQuery", "Connection is empty!");
+        return false;
     }
 
     public static NetworkManager getInstance() {

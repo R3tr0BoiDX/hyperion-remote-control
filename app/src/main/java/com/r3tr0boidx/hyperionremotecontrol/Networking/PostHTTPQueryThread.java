@@ -10,8 +10,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 
-public class PostQueryThread implements Runnable {
+public class PostHTTPQueryThread implements Runnable {
 
     private final JSONObject query;
     private final HttpURLConnection connection;
@@ -19,25 +20,25 @@ public class PostQueryThread implements Runnable {
     //volatile, so "connection" gets written directly to memory instead of (protected) cache
     private volatile Response response = null;
 
-    PostQueryThread(JSONObject _query, HttpURLConnection _connection) {
+    PostHTTPQueryThread(JSONObject _query, HttpURLConnection _connection) {
         query = _query;
         connection = _connection;
     }
 
     @Override
     public void run() {
-        DataOutputStream outputStream = null;
+        DataOutputStream out;
         try {
             //Write query to output and close it
-            outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.writeBytes(query.toString());
-            outputStream.flush();
-            outputStream.close();
+            out = new DataOutputStream(connection.getOutputStream());
+            out.writeBytes(query.toString());
+            out.flush();
+            out.close();
 
             //Read body into StringBuilder
             StringBuilder result = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
-                String line = null;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
                 while ((line = reader.readLine()) != null) {
                     result.append(line.trim());
                 }
@@ -48,13 +49,13 @@ public class PostQueryThread implements Runnable {
             String message = connection.getResponseMessage();
             String body = result.toString();
 
-            Log.v("PostQueryThread", "Got response: " + message + " - " + code);
+            Log.v("PostHTTPQueryThread", "Got response: " + message + " - " + code);
             response = new Response(code, message, body);
         } catch (IOException e) {
-            Log.e("PostQueryThread", "Problem with receiving data");
+            Log.e("PostHTTPQueryThread", "Problem with receiving data");
             e.printStackTrace();
         } catch (JSONException e) {
-            Log.e("PostQueryThread", "Not able to parse data into JSON object");
+            Log.e("PostHTTPQueryThread", "Not able to parse data into JSON object");
             e.printStackTrace();
         }
     }

@@ -10,7 +10,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class EstablishConnectionThread implements Runnable{
+public class EstablishHTTPConnectionThread implements Runnable{
 
     private final Inet4Address ip;
     private final boolean unsecure;
@@ -18,7 +18,7 @@ public class EstablishConnectionThread implements Runnable{
     //volatile, so "connection" gets written directly to memory instead of (protected) cache
     private volatile HttpURLConnection connection = null;
 
-    EstablishConnectionThread(Inet4Address _ip, boolean _unsecure){
+    EstablishHTTPConnectionThread(Inet4Address _ip, boolean _unsecure){
         ip = _ip;
         unsecure = _unsecure;
     }
@@ -41,13 +41,13 @@ public class EstablishConnectionThread implements Runnable{
     }
 
     public static HttpURLConnection getUnsecureConnection(Inet4Address _ip) throws IOException {
-        URL serverURL = getServerURL(_ip, NetworkManager.HTTP_PORT, "http");
+        URL serverURL = getServerURL(_ip, HTTPConnection.HTTP_PORT, "http");
         return getConnection(serverURL);
     }
 
     //TODO: Not working right now - SSL handshakes fails (Trust anchor for certification path not found.)
     public static HttpsURLConnection getSecureConnection(Inet4Address _ip) throws IOException {
-        URL serverURL = getServerURL(_ip, NetworkManager.HTTPS_PORT, "https");
+        URL serverURL = getServerURL(_ip, HTTPConnection.HTTPS_PORT, "https");
         return (HttpsURLConnection) getConnection(serverURL);
     }
 
@@ -69,7 +69,7 @@ public class EstablishConnectionThread implements Runnable{
     }
 
     private static URL getServerURL(Inet4Address _ip, int _port, String _protocol) throws MalformedURLException {
-        final URL url = new URL(_protocol, _ip.getHostAddress(), _port, NetworkManager.URL_FILE);
+        final URL url = new URL(_protocol, _ip.getHostAddress(), _port, HTTPConnection.URL_FILE);
         Log.v("getServerURL", url.toString());
         return url;
     }

@@ -2,11 +2,9 @@ package com.r3tr0boidx.hyperionremotecontrol.Control;
 
 import android.util.Log;
 
-import com.r3tr0boidx.hyperionremotecontrol.JSONHelper;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 //TODO: Implement a valiidate method, to check if command was successfull
@@ -24,13 +22,7 @@ public interface ControlCommand {
      */
     default Response execute(){
         JSONObject json = buildCommand();
-        try {
-            return NetworkManager.getInstance().postQuery(json);
-        } catch (InterruptedException e) {
-            Log.e("execute", "Can't execute " + COMMAND + " command!");
-            //e.printStackTrace();
-        }
-        return null;
+        return NetworkManager.getInstance().writeQuery(json);
     }
 
     /**

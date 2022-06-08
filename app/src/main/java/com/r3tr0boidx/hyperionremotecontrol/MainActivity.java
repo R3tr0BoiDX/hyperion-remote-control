@@ -6,19 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.r3tr0boidx.hyperionremotecontrol.Control.AdjustmentCommand;
 import com.r3tr0boidx.hyperionremotecontrol.Control.ColorCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.ComponentsCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.InstancesCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.SourceSelectionCommand;
-import com.r3tr0boidx.hyperionremotecontrol.Control.VideoModeCommand;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.HTTPConnection;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.NetworkManager;
 import com.r3tr0boidx.hyperionremotecontrol.Networking.Response;
+import com.r3tr0boidx.hyperionremotecontrol.Networking.TCPSocketConnection;
 import com.r3tr0boidx.hyperionremotecontrol.ServerInformation.*;
 import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformation;
 import com.r3tr0boidx.hyperionremotecontrol.SystemInformation.SystemInformationReader;
@@ -29,6 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,41 +40,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //createConnection();
 
         TextView text = findViewById(R.id.textView);
         text.setMovementMethod(new ScrollingMovementMethod());
 
         try {
             Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
-            NetworkManager.getInstance().establishConnection(ip, true);
+            TCPSocketConnection socketConnection = new TCPSocketConnection();
+            socketConnection.connect(ip);
 
-            Response r = getServerInfo();
-            ServerInfo info = InformationReader.readResponse(r);
-            assert info != null;
-
-            Helper.Log(info.getInstances()[0].printableString());
-
-            InstancesCommand command = new InstancesCommand(InstancesCommand.InstancesCommandType.stopInstance, info.getInstances()[0]);
-
+            ColorCommand command = new ColorCommand(50, Color.GREEN);
+            socketConnection.write(command.buildCommand());
             Helper.Log(command.buildCommand().toString());
-            command.execute();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    void createConnection(){
+        try {
+            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
+            HTTPConnection httpConnection = new HTTPConnection(true);
+            if (!NetworkManager.getInstance().establishConnection(ip, httpConnection)){
+                Log.w("createConnection", "Not connected!");
+            }
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
 
-    //Somehow network, somehow JSON and somehow helper. Don't know where to put this => to extra class
+    //Somehow network, somehow JSON and somehow helper. Don't know where to TODO: put this => to ServerInfo
     static Response getServerInfo() {
         try {
             JSONObject json = new JSONObject();
             json.put("command", "serverinfo");
-            return NetworkManager.getInstance().postQuery(json);
+            return NetworkManager.getInstance().writeQuery(json);
         } catch (JSONException e) {
             Log.e("getServerInfo", "Can't create json query!");
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            Log.e("getServerInfo", "Network error! Can't recieve answer");
             e.printStackTrace();
         }
         return null;
@@ -86,13 +90,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject json = new JSONObject();
             json.put("command", "sysinfo");
-            return NetworkManager.getInstance().postQuery(json);
+            return NetworkManager.getInstance().writeQuery(json);
         } catch (JSONException e) {
             Log.e("getSystemInfo", "Can't create json query!");
             //e.printStackTrace();
-        } catch (InterruptedException e) {
-            Log.e("getSystemInfo", "Network error! Can't recieve answer");
-            e.printStackTrace();
         }
         return null;
     }
@@ -108,17 +109,9 @@ public class MainActivity extends AppCompatActivity {
         TextView text = findViewById(R.id.textView);
         text.setMovementMethod(new ScrollingMovementMethod());
 
-        try {
-            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
-            NetworkManager.getInstance().establishConnection(ip, true);
-
-            ServerInfo infos = InformationReader.readResponse(getServerInfo());
-            if (infos != null){
-                text.setText(infos.concatenatePrintableString());
-            }
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        ServerInfo infos = InformationReader.readResponse(getServerInfo());
+        if (infos != null){
+            text.setText(infos.concatenatePrintableString());
         }
     }
 
@@ -126,17 +119,9 @@ public class MainActivity extends AppCompatActivity {
         TextView text = findViewById(R.id.textView);
         text.setMovementMethod(new ScrollingMovementMethod());
 
-        try {
-            Inet4Address ip = (Inet4Address) InetAddress.getByName(test_ip);
-            NetworkManager.getInstance().establishConnection(ip, true);
-
-            SystemInformation info = SystemInformationReader.readResponse(Objects.requireNonNull(getSystemInfo()));
-            if (info != null){
-                text.setText(info.concatenatePrintableString());
-            }
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        SystemInformation info = SystemInformationReader.readResponse(getSystemInfo());
+        if (info != null){
+            text.setText(info.concatenatePrintableString());
         }
     }
 }
